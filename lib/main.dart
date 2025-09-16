@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_book/loginpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -60,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         ),
         fontFamily: 'Prompt',
       ),
-      home: HomePage(onToggleTheme: _toggleTheme), //main
+      home: LoginScreen(onToggleTheme: _toggleTheme), // ---------- อันนี้คือหน้าแรกที่เปิดมา ถ้าอยากให้เปิดหน้าอื่นก็เปลี่ยนตรงนี้ ---------- //
     );
   }
 }

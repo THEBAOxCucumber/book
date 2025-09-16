@@ -14,10 +14,10 @@ class MyHomePage extends StatefulWidget {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('isLoggedIn');
     if (context.mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-        (route) => false,
-      );
+      // Navigator.of(context).pushAndRemoveUntil(
+      //   MaterialPageRoute(builder: (_) => const LoginPage()),
+      //   (route) => false,
+      // );
     }
   }
 
@@ -108,10 +108,10 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton(
                 icon: const Icon(Icons.person),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginPage()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (_) => const LoginPage()),
+                  // );
                 },
               ),
             ],
