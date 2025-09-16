@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "402838160392",
+    "project_id": "read-and-tell",
+    "storage_bucket": "read-and-tell.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402838160392:android:49a113c9c3eb47ce547dbd",
+        "android_client_info": {
+          "package_name": "com.example.project_book"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2LY_no79tQsHXHrIw4_X-7cczIJNk64o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
