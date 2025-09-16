@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'loginpage.dart';
+import 'search.dart';
 
 class MyHomePage extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -87,6 +88,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             backgroundColor: Theme.of(context).primaryColor,
             actions: [
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: BookSearchDelegate(),
+                  );
+                },
+              ),
               IconButton(
                 icon: Icon(
                   Theme.of(context).brightness == Brightness.dark
@@ -175,3 +185,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+

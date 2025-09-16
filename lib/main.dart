@@ -8,9 +8,7 @@ import 'homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final prefs = await SharedPreferences.getInstance();
   final isDarkMode = prefs.getBool('isDarkMode') ?? false;
@@ -50,8 +48,7 @@ class _MyAppState extends State<MyApp> {
         brightness: _isDarkMode ? Brightness.dark : Brightness.light,
         primaryColor: const Color(0xFF103F91),
         useMaterial3: true,
-        scaffoldBackgroundColor:
-            _isDarkMode ? Colors.black : Colors.white,
+        scaffoldBackgroundColor: _isDarkMode ? const Color(0xFF5A5A5A) : Colors.white,
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF103F91),
           foregroundColor: Colors.white,
@@ -86,13 +83,10 @@ class HomePage extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    "images/Read and tell bwpng.png",
-                    width: 300,
-                  ),
+                  Image.asset("images/Read and tell bwpng.png", width: 300),
                   const SizedBox(height: 20),
                   const Text(
-                    "Read and tell",
+                    "Read and Tell",
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -101,30 +95,41 @@ class HomePage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
-                  const Text(
+                  Text(
                     "ยินดีต้อนรับเข้าสู่Application สำหรับการรีวิวหนังสือ\n"
                     "ขอขอบคุณแรงบันดาลใจสำคัญจาก #เล่าหนังสือ\n"
                     "โดย คุณกอล์ฟ กิตติพัทธ์ ชลารักษ์\n",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors
+                                  .white // Dark mode
+                              : Colors.black, // Light mode
+                    ),
                   ),
+
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) =>
-                              MyHomePage(onToggleTheme: onToggleTheme),
+                          builder:
+                              (_) => MyHomePage(onToggleTheme: onToggleTheme),
                         ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 40),
+                        vertical: 15,
+                        horizontal: 40,
+                      ),
                       backgroundColor: const Color(0xFF103F91),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: const Text(
                       "เริ่มสั่งซื้อ",
@@ -133,7 +138,7 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 80),
                   const SizedBox(height: 10),
-                  const TextButton(
+                  TextButton(
                     onPressed: null,
                     child: Text(
                       "This project is part of the 02739342 course\n"
@@ -141,10 +146,17 @@ class HomePage extends StatelessWidget {
                       "นางสาวพิริยาภรณ์ แย้มสำรวล 6621601123\n"
                       "นายพีรพล ศิริวัฒน์ 6621601131\n",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white // Dark mode
+                            : Colors.black, // Light mode
+                      ),
                     ),
                   ),
-                  
+
+                    
+         
                 ],
               ),
             ),

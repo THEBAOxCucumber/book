@@ -103,7 +103,7 @@ class _BookTellState extends State<BookTellScreen> {
             children: [
               _buildTextField(
                 label: "Name Book",
-                hint: "เช่น Harry Potter",
+                hint: "เช่น ความทรงจำครั้งที่ร้าว",
                 onSaved: (val) => myBooktell.name = val ?? '',
                 validator:
                     RequiredValidator(errorText: "กรุณาป้อนชื่อหนังสือ").call,
