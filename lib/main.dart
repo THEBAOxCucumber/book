@@ -102,7 +102,9 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    "เลือกซื้อหนังสือหลากหลายหมวดหมู่\n",
+                    "ยินดีต้อนรับเข้าสู่Application สำหรับการรีวิวหนังสือ\n"
+                    "ขอขอบคุณแรงบันดาลใจสำคัญจาก #เล่าหนังสือ\n"
+                    "โดย คุณกอล์ฟ กิตติพัทธ์ ชลารักษ์\n",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
@@ -129,7 +131,20 @@ class HomePage extends StatelessWidget {
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 80),
+                  const SizedBox(height: 10),
+                  const TextButton(
+                    onPressed: null,
+                    child: Text(
+                      "This project is part of the 02739342 course\n"
+                      "Application Development for Mobile Devices\n"
+                      "นางสาวพิริยาภรณ์ แย้มสำรวล 6621601123\n"
+                      "นายพีรพล ศิริวัฒน์ 6621601131\n",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                  ),
+                  
                 ],
               ),
             ),
