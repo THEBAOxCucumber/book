@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -32,6 +33,8 @@ class AuthenticationService {
     // clear user session 
     await _auth.signOut();
     // Clear any stored data on Local Storage or Shared Preferences if needed
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('isLoggedIn');
   }
 
   bool isAuthenticated() {

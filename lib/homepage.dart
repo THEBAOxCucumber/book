@@ -4,29 +4,38 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'loginpage.dart';
 import 'search.dart';
+import 'authenticationService.dart';
 
 class MyHomePage extends StatefulWidget {
   final VoidCallback onToggleTheme;
   const MyHomePage({super.key, required this.onToggleTheme});
 
-  // logout logic
-  Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('isLoggedIn');
-    if (context.mounted) {
-      // Navigator.of(context).pushAndRemoveUntil(
-      //   MaterialPageRoute(builder: (_) => const LoginPage()),
-      //   (route) => false,
-      // );
-    }
-  }
-
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() =>
+      _MyHomePageState(onToggleTheme: onToggleTheme);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   final Future<FirebaseApp> booktell = Firebase.initializeApp();
+  final VoidCallback onToggleTheme;
+  _MyHomePageState({required this.onToggleTheme});
+
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle = TextStyle(
+    fontSize: 30,
+    fontWeight: FontWeight.bold,
+  );
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text('Index 0: Home', style: optionStyle),
+    Text('Index 1: Business', style: optionStyle),
+    Text('Index 2: School', style: optionStyle),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   /// แสดงรายละเอียดหนังสือใน Dialog
   void _showBookDetail(BuildContext context, QueryDocumentSnapshot doc) {
@@ -89,12 +98,9 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Theme.of(context).primaryColor,
             actions: [
               IconButton(
-                icon: const Icon(Icons.search),
+                icon: const Icon(Icons.search, color: Colors.white),
                 onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: BookSearchDelegate(),
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => SearchPage()));
                 },
               ),
               IconButton(
@@ -108,10 +114,14 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton(
                 icon: const Icon(Icons.person),
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (_) => const LoginPage()),
-                  // );
+                  AuthenticationService().logout();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LoginScreen(onToggleTheme: onToggleTheme),
+                    ),
+                    (route) => false,
+                  );
                 },
               ),
             ],
@@ -180,10 +190,53 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
+          drawer: Drawer(
+            // Add a ListView to the drawer. This ensures the user can scroll
+            // through the options in the drawer if there isn't enough vertical
+            // space to fit everything.
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(color: Colors.blue),
+                  child: Text('Drawer Header'),
+                ),
+                ListTile(
+                  title: const Text('Home'),
+                  selected: _selectedIndex == 0,
+                  onTap: () {
+                    // Update the state of the app
+                    _onItemTapped(0);
+                    // Then close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('Business'),
+                  selected: _selectedIndex == 1,
+                  onTap: () {
+                    // Update the state of the app
+                    _onItemTapped(1);
+                    // Then close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('School'),
+                  selected: _selectedIndex == 2,
+                  onTap: () {
+                    // Update the state of the app
+                    _onItemTapped(2);
+                    // Then close the drawer
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
   }
 }
-
-

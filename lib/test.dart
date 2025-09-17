@@ -1,49 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class SearchPage extends StatefulWidget {
-  SearchPage({super.key});
-  final CollectionReference booksRef = FirebaseFirestore.instance.collection('booktells');
+class BookSearchDelegate extends SearchDelegate<String> {
+  final CollectionReference booksRef = FirebaseFirestore.instance.collection(
+    'booktells',
+  );
+  
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+ThemeData appBarTheme(BuildContext context) {
+  final ThemeData theme = Theme.of(context);
+  return theme.copyWith(
+    appBarTheme: const AppBarTheme(
+      color: Color(0xFF103F91), // สีพื้น AppBar / ช่องค้นหา
+      
+      iconTheme: IconThemeData(color: Colors.white), // สีไอคอน
+      toolbarTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+      titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+    ),
+    textTheme: theme.textTheme.copyWith(
+      titleMedium: const TextStyle(color: Colors.white), // สีข้อความ
+    ),
+  );
 }
 
-class _SearchPageState extends State<SearchPage> {
-  final TextEditingController _controller = TextEditingController();
-  late CollectionReference booksRef = widget.booksRef;
-  String query = "";
+
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () => query = '',
+      ),
+    ];
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: _controller,
-          onChanged: (value) {
-            setState(() {
-              query = value;
-            });
-          },
-          style: const TextStyle(color: Colors.white), // ✅ white text
-          decoration: const InputDecoration(
-            hintText: "Search books...",
-            hintStyle: TextStyle(color: Colors.white70),
-            border: InputBorder.none,
-            prefixIcon: Icon(Icons.search, color: Colors.white),
-          ),
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: buildResults(context),
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, ''),
     );
   }
+
 
   @override
   Widget buildResults(BuildContext context) {
@@ -150,5 +150,10 @@ class _SearchPageState extends State<SearchPage> {
       },
 
     );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return const Center(child: Text('พิมพ์ชื่อหนังสือหรือผู้เขียนเพื่อค้นหา'));
   }
 }

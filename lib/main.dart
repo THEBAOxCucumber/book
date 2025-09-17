@@ -29,11 +29,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late bool _isDarkMode;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
     super.initState();
     _isDarkMode = widget.isDarkMode;
+    _isLoggedIn = widget.isLoggedIn;
   }
 
   void _toggleTheme() async {
@@ -51,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         brightness: _isDarkMode ? Brightness.dark : Brightness.light,
         primaryColor: const Color(0xFF103F91),
         useMaterial3: true,
-        scaffoldBackgroundColor: _isDarkMode ? const Color(0xFF5A5A5A) : Colors.white,
+        scaffoldBackgroundColor: _isDarkMode ? const Color(0xFF28292e) : Colors.white,
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFF103F91),
           foregroundColor: Colors.white,
@@ -63,7 +65,11 @@ class _MyAppState extends State<MyApp> {
         ),
         fontFamily: 'Prompt',
       ),
-      home: LoginScreen(onToggleTheme: _toggleTheme), // ---------- อันนี้คือหน้าแรกที่เปิดมา ถ้าอยากให้เปิดหน้าอื่นก็เปลี่ยนตรงนี้ ---------- //
+      home: _isLoggedIn
+          ? MyHomePage(onToggleTheme: _toggleTheme)
+          : LoginScreen(onToggleTheme: _toggleTheme)
+      
+      //LoginScreen(onToggleTheme: _toggleTheme), // ---------- อันนี้คือหน้าแรกที่เปิดมา ถ้าอยากให้เปิดหน้าอื่นก็เปลี่ยนตรงนี้ ---------- //
     );
   }
 }
@@ -107,8 +113,7 @@ class HomePage extends StatelessWidget {
                       fontSize: 16,
                       color:
                           Theme.of(context).brightness == Brightness.dark
-                              ? Colors
-                                  .white // Dark mode
+                              ? Colors.white // Dark mode
                               : Colors.black, // Light mode
                     ),
                   ),
