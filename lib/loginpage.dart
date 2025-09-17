@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'authenticationService.dart';
 import 'main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   final VoidCallback onToggleTheme;
   const LoginScreen({super.key, required this.onToggleTheme});
+
+  Future<void> _login() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -66,6 +72,7 @@ class LoginScreen extends StatelessWidget {
                                 ),
                           ),
                         );
+                        _login();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('เข้าสู่ระบบล้มเหลว')),

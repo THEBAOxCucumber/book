@@ -1,76 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_book/loginpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'homepage.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  final prefs = await SharedPreferences.getInstance();
-  final isDarkMode = prefs.getBool('isDarkMode') ?? false;
-  final loggedIn = prefs.getBool('isLoggedIn') ?? false;
-
-  runApp(MyApp(isDarkMode: isDarkMode, isLoggedIn: loggedIn));
-}
-
-class MyApp extends StatefulWidget {
-  final bool isDarkMode;
-  final bool isLoggedIn;
-  const MyApp({super.key, required this.isDarkMode, required this.isLoggedIn});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late bool _isDarkMode;
-
-  @override
-  void initState() {
-    super.initState();
-    _isDarkMode = widget.isDarkMode;
-  }
-
-  void _toggleTheme() async {
-    setState(() => _isDarkMode = !_isDarkMode);
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', _isDarkMode);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'แอปสั่งหนังสือ',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: _isDarkMode ? Brightness.dark : Brightness.light,
-        primaryColor: const Color(0xFF103F91),
-        useMaterial3: true,
-        scaffoldBackgroundColor: _isDarkMode ? const Color(0xFF5A5A5A) : Colors.white,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF103F91),
-          foregroundColor: Colors.white,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF103F91),
-          ),
-        ),
-        fontFamily: 'Prompt',
-      ),
-      home: LoginScreen(onToggleTheme: _toggleTheme), // ---------- อันนี้คือหน้าแรกที่เปิดมา ถ้าอยากให้เปิดหน้าอื่นก็เปลี่ยนตรงนี้ ---------- //
-    );
-  }
-}
-
-/// ----------------------
-/// หน้าแรก (Landing Page)
-/// ----------------------
 class HomePage extends StatelessWidget {
   final VoidCallback onToggleTheme;
   const HomePage({super.key, required this.onToggleTheme});
