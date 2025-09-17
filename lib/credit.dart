@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
 
-class HomePage extends StatelessWidget {
+class CreditPage extends StatelessWidget {
   final VoidCallback onToggleTheme;
-  const HomePage({super.key, required this.onToggleTheme});
+  const CreditPage({super.key, required this.onToggleTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pop(
                         context,
                         MaterialPageRoute(
                           builder:

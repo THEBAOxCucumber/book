@@ -25,13 +25,14 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
+          
           controller: _controller,
           onChanged: (value) {
             setState(() {
               query = value;
             });
           },
-          style: const TextStyle(color: Colors.white), // ✅ white text
+          style: const TextStyle(color: Colors.white, fontSize: 22), // ✅ white text
           decoration: const InputDecoration(
             hintText: "Search books...",
             hintStyle: TextStyle(color: Colors.white70),
@@ -148,7 +149,6 @@ class _SearchPageState extends State<SearchPage> {
           },
         );
       },
-
     );
   }
 }

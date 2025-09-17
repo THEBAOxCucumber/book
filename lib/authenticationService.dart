@@ -28,6 +28,10 @@ class AuthenticationService {
     }
   }
 
+  String? getEmail() {
+    return _auth.currentUser!.email;
+  }
+
   Future<void> logout() async {
     // Implement logout logic here
     // clear user session 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'authenticationService.dart';
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'homepage.dart';
 
 class LoginScreen extends StatelessWidget {
   final VoidCallback onToggleTheme;
@@ -20,7 +21,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('เข้าสู่ระบบ'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF103F91),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -67,7 +68,7 @@ class LoginScreen extends StatelessWidget {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder:
-                                (context) => HomePage(
+                                (context) => MyHomePage(
                                     onToggleTheme: onToggleTheme,
                                 ),
                           ),
