@@ -1,25 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'bookdetails.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'loginpage.dart';
+import 'drawer.dart';
 
 class BookTellScreen extends StatefulWidget {
-  const BookTellScreen({super.key});
+  final VoidCallback onToggleTheme;
+  const BookTellScreen({super.key, required this.onToggleTheme});
 
   // ฟังก์ชันออกจากระบบ
-  Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('isLoggedIn');
+  // Future<void> _logout(BuildContext context) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.remove('isLoggedIn');
 
-    // if (context.mounted) {
-    //   Navigator.of(context).pushAndRemoveUntil(
-    //     MaterialPageRoute(builder: (context) => const LoginPage()),
-    //     (Route<dynamic> route) => false,
-    //   );
-    // }
-  }
+  //   if (context.mounted) {
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //       MaterialPageRoute(builder: (context) => const LoginScreen()),
+  //       (Route<dynamic> route) => false,
+  //     );
+  //   }
+  // }
 
   @override
   _BookTellState createState() => _BookTellState();
@@ -53,7 +53,6 @@ class _BookTellState extends State<BookTellScreen> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
           ),
         ),
         const SizedBox(height: 6),
@@ -84,15 +83,23 @@ class _BookTellState extends State<BookTellScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      //backgroundColor: const Color(0xFFF7F8FA),
       appBar: AppBar(
         title: const Text('BookTell'),
-        backgroundColor: const Color(0xFF103F91),
+        backgroundColor: Theme.of(context).primaryColor,
         actions: [
+          // IconButton(
+          //   icon: const Icon(Icons.logout),
+          //   onPressed: () => widget._logout(context),
+          // ),
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => widget._logout(context),
-          ),
+                icon: Icon(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Icons.wb_sunny
+                      : Icons.nightlight_round,
+                ),
+                onPressed: widget.onToggleTheme,
+              ),
         ],
       ),
       body: SingleChildScrollView(
@@ -144,7 +151,7 @@ class _BookTellState extends State<BookTellScreen> {
                 hint: "เขียนรีวิวสั้นๆ",
                 onSaved: (val) => myBooktell.review = val ?? '',
                 validator: RequiredValidator(errorText: "กรุณาป้อนรีวิว").call,
-                minLines: 1,
+                minLines: 4,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
               ),
@@ -186,6 +193,7 @@ class _BookTellState extends State<BookTellScreen> {
           ),
         ),
       ),
+      drawer: MyDrawer(onToggleTheme: widget.onToggleTheme)
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_book/drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
 
@@ -44,6 +45,26 @@ class CreditPage extends StatelessWidget {
                     ),
                   ),
 
+                  
+                  const SizedBox(height: 80),
+                  const SizedBox(height: 10),
+                  TextButton(
+                    onPressed: null,
+                    child: Text(
+                      "This project is part of the 02739342 course\n"
+                      "Application Development for Mobile Devices\n"
+                      "นางสาวพิริยาภรณ์ แย้มสำรวล 6621601123\n"
+                      "นายพีรพล ศิริวัฒน์ 6621601131\n",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white // Dark mode
+                            : Colors.black, // Light mode
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
@@ -70,26 +91,6 @@ class CreditPage extends StatelessWidget {
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
-                  const SizedBox(height: 80),
-                  const SizedBox(height: 10),
-                  TextButton(
-                    onPressed: null,
-                    child: Text(
-                      "This project is part of the 02739342 course\n"
-                      "Application Development for Mobile Devices\n"
-                      "นางสาวพิริยาภรณ์ แย้มสำรวล 6621601123\n"
-                      "นายพีรพล ศิริวัฒน์ 6621601131\n",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white // Dark mode
-                            : Colors.black, // Light mode
-                      ),
-                    ),
-                  ),
-
-                    
          
                 ],
               ),

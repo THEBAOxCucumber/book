@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:project_book/CRUDnav.dart';
+import 'package:project_book/homepage.dart';
 import 'authenticationService.dart';
 import 'loginpage.dart';
 import 'credit.dart';
+import 'booktell.dart';
 
 class MyDrawer extends StatefulWidget {
-  const MyDrawer({super.key, required this.title, required this.onToggleTheme});
+  const MyDrawer({super.key, required this.onToggleTheme});
   final VoidCallback onToggleTheme;
-  final String title;
+  
 
   @override
   State<MyDrawer> createState() => _MyDrawer();
@@ -19,6 +22,13 @@ class _MyDrawer extends State<MyDrawer> {
     fontSize: 30,
     fontWeight: FontWeight.bold,
   );
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      print(_selectedIndex);
+    });
+  }
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -34,7 +44,7 @@ class _MyDrawer extends State<MyDrawer> {
           //     subtitle: Text(''),
           //   ),
           // ),
-
+          SizedBox(height: 2,),
           ListTile(
             leading: const Icon(Icons.account_circle),
             title: Text(AuthenticationService().getEmail() ?? ''),
@@ -48,20 +58,30 @@ class _MyDrawer extends State<MyDrawer> {
             color: Colors.grey, // Color of the divider line
           ),
           ListTile(
+            selected: _selectedIndex == 0,
             leading: const Icon(Icons.home),
             title: const Text('หน้าแรก'),
             onTap: () {
-              Navigator.pushReplacementNamed(context, '/home');
+              _onItemTapped(0);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                  builder:
+                      (_) => MyHomePage(onToggleTheme: widget.onToggleTheme),
+                ),
+                (route) => false,
+              );
             },
           ),
           ListTile(
+            selected: _selectedIndex == 1,
             leading: const Icon(Icons.book),
             title: const Text('หนังสือของฉัน'),
             onTap: () {
+              _onItemTapped(1);
               Navigator.pushReplacementNamed(context, '/mybooks');
             },
           ),
           ListTile(
+            selected: _selectedIndex == 2,
             leading: const Icon(Icons.groups),
             title: const Text('เหล่าผู้จัดทำ'),
             onTap: () {
@@ -71,6 +91,23 @@ class _MyDrawer extends State<MyDrawer> {
                   builder:
                       (_) => CreditPage(onToggleTheme: widget.onToggleTheme),
                 ),
+              );
+            },
+          ),
+          ListTile(
+            selected: _selectedIndex == 3,
+            leading: const Icon(Icons.add),
+            title: const Text('เพิ่มหนังสือ'),
+            onTap: () {
+              _onItemTapped(3);
+              print(_selectedIndex);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => Crudnav(onToggleTheme: widget.onToggleTheme),
+                ),
+                (route) => false,
               );
             },
           ),
