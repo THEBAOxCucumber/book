@@ -21,7 +21,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final VoidCallback onToggleTheme;
   _MyHomePageState({required this.onToggleTheme});
 
-  
+  bool _canShowButton = true;
+  void hideWidget() {
+    setState(() {
+      _canShowButton = !_canShowButton;
+    });
+  }
 
   /// แสดงรายละเอียดหนังสือใน Dialog
   void _showBookDetail(BuildContext context, QueryDocumentSnapshot doc) {
@@ -86,7 +91,10 @@ class _MyHomePageState extends State<MyHomePage> {
               IconButton(
                 icon: const Icon(Icons.search, color: Colors.white),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => SearchPage()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => SearchPage()),
+                  );
                 },
               ),
               IconButton(
@@ -97,7 +105,45 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: widget.onToggleTheme,
               ),
-              
+              AuthenticationService().getEmail() != "Guest"
+                  ? const SizedBox.shrink()
+                  : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFffd342), // button background color
+                      foregroundColor: Colors.black, // text color
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ), // rounded corners
+                      ),
+                    ),
+                    child: const Text('Login'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  LoginScreen(onToggleTheme: onToggleTheme),
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(width: 10,)
+              //   ElevatedButton(
+              //   child: Text("Login"),
+              //   onPressed: () {
+              //     Navigator.pushAndRemoveUntil(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => LoginScreen(onToggleTheme: onToggleTheme,)),
+              //       (route) => false,
+              //     );
+              //   },
+              // ),
             ],
           ),
           body: StreamBuilder<QuerySnapshot>(
@@ -164,8 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
-          drawer: MyDrawer(onToggleTheme: onToggleTheme)
-          
+          drawer: MyDrawer(onToggleTheme: onToggleTheme),
         );
       },
     );

@@ -9,7 +9,6 @@ import 'booktell.dart';
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key, required this.onToggleTheme});
   final VoidCallback onToggleTheme;
-  
 
   @override
   State<MyDrawer> createState() => _MyDrawer();
@@ -22,6 +21,7 @@ class _MyDrawer extends State<MyDrawer> {
     fontSize: 30,
     fontWeight: FontWeight.bold,
   );
+  final _isVisible = true;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -29,6 +29,7 @@ class _MyDrawer extends State<MyDrawer> {
       print(_selectedIndex);
     });
   }
+
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
@@ -44,17 +45,18 @@ class _MyDrawer extends State<MyDrawer> {
           //     subtitle: Text(''),
           //   ),
           // ),
-          SizedBox(height: 2,),
+          SizedBox(height: 2),
           ListTile(
             leading: const Icon(Icons.account_circle),
-            title: Text(AuthenticationService().getEmail() ?? ''),
+            title: Text(email ?? " "),
           ),
           // 👇 Place all your ListTiles here inside the drawer
           Divider(
             height: 20, // Total height of the divider, including padding
             thickness: 1, // Thickness of the line itself
             indent: 16, // Space from the leading edge to the start of the line
-            endIndent: 16, // Space from the trailing edge to the end of the line
+            endIndent:
+                16, // Space from the trailing edge to the end of the line
             color: Colors.grey, // Color of the divider line
           ),
           ListTile(
@@ -63,7 +65,9 @@ class _MyDrawer extends State<MyDrawer> {
             title: const Text('หน้าแรก'),
             onTap: () {
               _onItemTapped(0);
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
                   builder:
                       (_) => MyHomePage(onToggleTheme: widget.onToggleTheme),
                 ),
@@ -72,6 +76,7 @@ class _MyDrawer extends State<MyDrawer> {
             },
           ),
           ListTile(
+            enabled: email != "Guest",
             selected: _selectedIndex == 1,
             leading: const Icon(Icons.book),
             title: const Text('หนังสือของฉัน'),
@@ -94,41 +99,46 @@ class _MyDrawer extends State<MyDrawer> {
               );
             },
           ),
+
+          // ----- เตือน: แก้เงื่อนไขว่าจะแสดงตอน login email อะไร
           ListTile(
             selected: _selectedIndex == 3,
             leading: const Icon(Icons.add),
-            title: const Text('เพิ่มหนังสือ'),
+            title: const Text('เพิ่ม/แก้ไข/ลบหนังสือ'),
             onTap: () {
               _onItemTapped(3);
               print(_selectedIndex);
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (_) => Crudnav(onToggleTheme: widget.onToggleTheme),
+                  builder: (_) => Crudnav(onToggleTheme: widget.onToggleTheme),
                 ),
                 (route) => false,
               );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text(
-              'ออกจากระบบ',
-              style: TextStyle(color: Colors.red),
-            ),
-            onTap: () {
-              AuthenticationService().logout();
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => LoginScreen(onToggleTheme: widget.onToggleTheme),
+          AuthenticationService().getEmail() == "Guest"
+              ? const SizedBox.shrink()
+              : ListTile(
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: const Text(
+                  'ออกจากระบบ',
+                  style: TextStyle(color: Colors.red),
                 ),
-                (route) => false,
-              );
-            },
-          ),
+                onTap: () {
+                  Navigator.pop(context);
+                  AuthenticationService().logout();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) =>
+                              MyHomePage(onToggleTheme: widget.onToggleTheme),
+                    ),
+                    (route) => false,
+                  );
+                },
+              ),
         ],
       ),
     );

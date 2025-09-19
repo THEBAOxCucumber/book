@@ -29,7 +29,13 @@ class AuthenticationService {
   }
 
   String? getEmail() {
-    return _auth.currentUser!.email;
+    String? email;
+    try {
+      email = _auth.currentUser!.email;
+    } catch (e) {
+      email = "Guest";
+    }
+    return email;
   }
 
   Future<void> logout() async {

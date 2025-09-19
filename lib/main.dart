@@ -108,9 +108,11 @@ class _MyAppState extends State<MyApp> {
         ),
         fontFamily: 'Prompt',
       ),
-      home: _isLoggedIn
-          ? MyHomePage(onToggleTheme: _toggleTheme)
-          : LoginScreen(onToggleTheme: _toggleTheme)
+      home: MyHomePage(onToggleTheme: _toggleTheme)
+      
+      // _isLoggedIn
+      //     ? MyHomePage(onToggleTheme: _toggleTheme)
+      //     : LoginScreen(onToggleTheme: _toggleTheme)
       
       //LoginScreen(onToggleTheme: _toggleTheme), // ---------- อันนี้คือหน้าแรกที่เปิดมา ถ้าอยากให้เปิดหน้าอื่นก็เปลี่ยนตรงนี้ ---------- //
     );
