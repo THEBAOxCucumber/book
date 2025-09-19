@@ -75,7 +75,9 @@ class _MyDrawer extends State<MyDrawer> {
               );
             },
           ),
-          ListTile(
+          AuthenticationService().getEmail() == "Guest"
+              ? const SizedBox.shrink()
+              : ListTile(
             enabled: email != "Guest",
             selected: _selectedIndex == 1,
             leading: const Icon(Icons.book),

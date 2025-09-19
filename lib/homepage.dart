@@ -6,6 +6,8 @@ import 'loginpage.dart';
 import 'search.dart';
 import 'authenticationService.dart';
 import 'drawer.dart';
+import 'cart.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   final VoidCallback onToggleTheme;
@@ -106,10 +108,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: widget.onToggleTheme,
               ),
               AuthenticationService().getEmail() != "Guest"
-                  ? const SizedBox.shrink()
+                  ? IconButton(
+                    icon: const Icon(Icons.shopping_cart, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => CartPage(
+                              ),
+                        ),
+                      );
+                    },
+                  )
                   : ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFffd342), // button background color
+                      backgroundColor: const Color(
+                        0xFFffd342,
+                      ), // button background color
                       foregroundColor: Colors.black, // text color
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -133,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     },
                   ),
-                  SizedBox(width: 10,)
+              SizedBox(width: 10),
               //   ElevatedButton(
               //   child: Text("Login"),
               //   onPressed: () {
@@ -167,6 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 12,
                 padding: const EdgeInsets.all(12),
+                childAspectRatio: 0.7, // 🔑 lower than 1.0 makes card taller
                 children:
                     docs.map((doc) {
                       return Card(
@@ -202,6 +219,33 @@ class _MyHomePageState extends State<MyHomePage> {
                                   textAlign: TextAlign.center,
                                 ),
                               ),
+                              
+                              AuthenticationService().getEmail() == "Guest"
+                                  ? const SizedBox.shrink()
+                                  : ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFffd342),
+                                      foregroundColor: Colors.black,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text('Add to cart'),
+                                    onPressed: () {
+                                      Provider.of<CartProvider>(
+                                        context,
+                                        listen: false,
+                                      ).addItem(
+                                        doc.id,
+                                        doc["name"]!,
+                                        doc["price"]!,
+                                      );
+                                    },
+                                  ),
                             ],
                           ),
                         ),

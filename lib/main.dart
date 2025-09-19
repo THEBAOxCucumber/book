@@ -8,6 +8,8 @@ import 'firebase_options.dart';
 import 'homepage.dart';
 import 'drawer.dart';
 import 'credit.dart';
+import 'package:provider/provider.dart';
+import 'cart.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +20,11 @@ void main() async {
   final loggedIn = prefs.getBool('isLoggedIn') ?? false;
   final VoidCallback onToggleTheme;
 
-  runApp(MyApp(isDarkMode: isDarkMode, isLoggedIn: loggedIn, /*onToggleTheme: onToggleTheme,*/));
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => CartProvider(),
+      child:
+    MyApp(isDarkMode: isDarkMode, isLoggedIn: loggedIn, /*onToggleTheme: onToggleTheme,*/)));
 }
 
 class MyApp extends StatefulWidget {
