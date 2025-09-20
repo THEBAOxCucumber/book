@@ -28,6 +28,17 @@ class AuthenticationService {
     }
   }
 
+  Future<bool> resetpassword(String username) async {
+    try {
+      await _auth.sendPasswordResetEmail(
+        email: username,
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   String? getEmail() {
     String? email;
     try {

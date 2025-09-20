@@ -3,16 +3,61 @@ import 'authenticationService.dart';
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
+import 'register.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
   const LoginScreen({super.key, required this.onToggleTheme});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreen();
+}
+
+class _LoginScreen extends State<LoginScreen> {
+  bool _obscurePassword = true;
+  bool _isLoading = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Future<void> _login() async {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
   }
-  
+
+  Future<void> _handleLogin(username, password) async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      bool success = await AuthenticationService().login(username, password);
+
+      if (success) {
+        _showMessage('เข้าสู่ระบบสำเร็จ');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder:
+                (context) => MyHomePage(onToggleTheme: widget.onToggleTheme),
+          ),
+        );
+      } else {
+        _showMessage('อีเมลหรือรหัสผ่านไม่ถูกต้อง', isError: true);
+      }
+    } catch (e) {
+      // แสดงเฉพาะข้อความภาษาไทยที่เข้าใจง่าย
+      String errorMessage = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
+      if (e.toString().contains('ไม่พบผู้ใช้')) {
+        errorMessage = 'ไม่พบบัญชีผู้ใช้นี้';
+      } else if (e.toString().contains('รหัสผ่าน')) {
+        errorMessage = 'รหัสผ่านไม่ถูกต้อง';
+      } else if (e.toString().contains('network')) {
+        errorMessage = 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต';
+      }
+      _showMessage(errorMessage, isError: true);
+    }
+
+    setState(() => _isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     String email = '';
@@ -26,98 +71,247 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const FlutterLogo(size: 100),
-              const SizedBox(height: 48),
-              // ช่องกรอกอีเมล
-              TextFormField(
-                onChanged: (value) {
-                  email = value;
-                },
-                decoration: const InputDecoration(
-                  labelText: 'อีเมล',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // ช่องกรอกรหัสผ่าน
-              TextFormField(
-                onChanged: (value) {
-                  password = value;
-                },
-                obscureText: true, // ซ่อนรหัสผ่าน
-                decoration: const InputDecoration(
-                  labelText: 'รหัสผ่าน',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                ),
-              ),
-              const SizedBox(height: 24),
-              // ปุ่ม Login
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    AuthenticationService().login(email, password).then((
-                      success,
-                    ) {
-                      if (success) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder:
-                                (context) => MyHomePage(
-                                    onToggleTheme: onToggleTheme,
-                                ),
-                          ),
-                        );
-                        _login();
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('เข้าสู่ระบบล้มเหลว')),
-                        );
-                      }
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text(
-                    'เข้าสู่ระบบ',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 32),
 
-              // ปุ่ม Register
-              TextButton(
-                onPressed: () {
-                  AuthenticationService().register(email, password).then((
-                    success,
-                  ) {
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('ลงทะเบียนสำเร็จ')),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('ลงทะเบียนล้มเหลว')),
-                      );
-                    }
-                  });
-                },
-                child: const Text(
-                  'ลงทะเบียน',
-                  style: TextStyle(color: Colors.blueAccent),
+                // Logo
+                Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(color: Colors.white,),
+                  child: const Image(
+                    image: AssetImage("images/Read and tell bwpng.png"),
+                    width: 500,
+                    fit: BoxFit.cover,
+                  ),
                 ),
+
+                const SizedBox(height: 24),
+                Text(
+                  'ยินดีต้อนรับ',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'สู่ร้านขายหนังสือ Read and Tell',
+                  style: TextStyle(fontSize: 16),
+                ),
+
+                const SizedBox(height: 32),
+
+                // ช่องกรอกอีเมล
+                TextFormField(
+                  onChanged: (value) {
+                    email = value;
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณากรอกอีเมล';
+                    }
+                    if (!value.contains('@')) {
+                      return 'รูปแบบอีเมลไม่ถูกต้อง';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'อีเมล',
+                    prefixIcon: Icon(Icons.email_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // ช่องกรอกรหัสผ่าน
+                TextFormField(
+                  onChanged: (value) {
+                    password = value;
+                  },
+                  obscureText: _obscurePassword,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'กรุณากรอกรหัสผ่าน';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'รหัสผ่าน',
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() => _obscurePassword = !_obscurePassword);
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // ปุ่มเข้าสู่ระบบ
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed:
+                        _isLoading ? null : () => _handleLogin(email, password),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child:
+                        _isLoading
+                            ? const CircularProgressIndicator(strokeWidth: 2)
+                            : const Text(
+                              'เข้าสู่ระบบ',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // เส้นแบ่ง
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: Colors.grey[400])),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('หรือ', style: TextStyle()),
+                    ),
+                    Expanded(child: Divider(color: Colors.grey[400])),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // ปุ่มไปหน้าสมัครสมาชิก
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: OutlinedButton(
+                    onPressed:
+                        _isLoading
+                            ? null
+                            : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RegisterScreen(),
+                                ),
+                              );
+                            },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      side: BorderSide(color: Colors.blue),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'สมัครสมาชิก',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // ลิงก์ลืมรหัสผ่าน
+                TextButton(
+                  onPressed: () {
+                    _showResetPasswordDialog();
+                  },
+                  child: Text(
+                    'ลืมรหัสผ่าน?',
+                    style: TextStyle(color: Colors.blue[600], fontSize: 14),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showResetPasswordDialog() {
+    final TextEditingController resetEmailController = TextEditingController();
+    String email = '';
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text('รีเซ็ตรหัสผ่าน'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('กรอกอีเมลเพื่อรับลิงก์รีเซ็ตรหัสผ่าน'),
+                SizedBox(height: 16),
+                TextFormField(
+                  onChanged: (value) {
+                    email = value;
+                  },
+                  controller: resetEmailController,
+                  decoration: InputDecoration(
+                    labelText: 'อีเมล',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('ยกเลิก'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if (resetEmailController.text.isNotEmpty) {
+                    try {
+                      await AuthenticationService().resetpassword(email);
+                      Navigator.pop(context);
+                      _showMessage('ส่งลิงก์รีเซ็ตรหัสผ่านไปที่อีเมลแล้ว');
+                    } catch (e) {
+                      _showMessage('ไม่สามารถส่งอีเมลได้', isError: true);
+                    }
+                  }
+                },
+                child: Text('ส่ง'),
               ),
             ],
           ),
-        ),
+    );
+  }
+
+  void _showMessage(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+        duration: Duration(seconds: 3),
       ),
     );
   }
