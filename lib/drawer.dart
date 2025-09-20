@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_book/CRUDnav.dart';
+import 'package:project_book/favoritepage.dart';
 import 'package:project_book/homepage.dart';
 import 'authenticationService.dart';
 import 'loginpage.dart';
@@ -84,7 +85,13 @@ class _MyDrawer extends State<MyDrawer> {
             title: const Text('หนังสือของฉัน'),
             onTap: () {
               _onItemTapped(1);
-              Navigator.pushReplacementNamed(context, '/mybooks');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => FavoritePage(),
+                ),
+              );
             },
           ),
           ListTile(
