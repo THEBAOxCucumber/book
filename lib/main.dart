@@ -10,6 +10,7 @@ import 'drawer.dart';
 import 'credit.dart';
 import 'package:provider/provider.dart';
 import 'cart.dart';
+import 'favoriteservice.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final isDarkMode = prefs.getBool('isDarkMode') ?? false;
   final loggedIn = prefs.getBool('isLoggedIn') ?? false;
+  
   final VoidCallback onToggleTheme;
 
   runApp(

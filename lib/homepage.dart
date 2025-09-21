@@ -13,9 +13,9 @@ import 'book.dart';
 import 'favoriteservice.dart';
 
 final List<Book> books = [
-  Book(id: "1", title: "Book A"),
-  Book(id: "2", title: "Book B"),
-  Book(id: "3", title: "Book C"),
+  Book(id: "1", name: "Book A"),
+  Book(id: "2", name: "Book B"),
+  Book(id: "3", name: "Book C"),
 ];
 
 class MyHomePage extends StatefulWidget {
@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final Future<FirebaseApp> booktell = Firebase.initializeApp();
   final VoidCallback onToggleTheme;
-  //final favoriteService = FavoriteService();
+  final favoriteService = FavoriteService();
   _MyHomePageState({required this.onToggleTheme});
 
   bool _canShowButton = true;
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       await docRef.set({
         "itemId": book.id,
-        "title": book.title,
+        "name": book.name,
         "createdAt": FieldValue.serverTimestamp(),
       });
     }
@@ -80,9 +80,64 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(height: 10),
                   Text(doc['review']),
                 ],
+                
+
               ),
             ),
             actions: [
+
+               AuthenticationService().getEmail() == "Guest"
+                                  ? const SizedBox.shrink()
+                                  : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Color(0xFF103F91),    
+                                            foregroundColor: Colors.white,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 8,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          child: const Text('Add to cart'),
+                                          onPressed: () {
+                                            Provider.of<CartProvider>(
+                                              context,
+                                              listen: false,
+                                            ).addItem(
+                                              doc.id,
+                                              doc["name"] ?? "Unknown",
+                                              doc["price"] ?? "0",
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: FavoriteIcon(
+                                          bookId: doc.id,
+                                          image: doc["image"] ?? "",
+                                          name: doc["name"] ?? "Unknown",
+                                          price: doc["price"]?.toDouble() ?? 0.0,
+                                        ),
+                                        onPressed: () {
+                                          toggleFavorite(
+                                            Book(
+                                              id: doc.id,
+                                              name: doc["name"] ?? "Unknown",
+                                              price: doc["price"]?.toDouble() ?? 0.0,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('ปิด'),
@@ -253,55 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
 
-                              // ✅ Show Add to Cart only for logged-in users
-                              AuthenticationService().getEmail() == "Guest"
-                                  ? const SizedBox.shrink()
-                                  : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(
-                                              0xFFffd342,
-                                            ),
-                                            foregroundColor: Colors.black,
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 8,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          child: const Text('Add to cart'),
-                                          onPressed: () {
-                                            Provider.of<CartProvider>(
-                                              context,
-                                              listen: false,
-                                            ).addItem(
-                                              doc.id,
-                                              doc["name"] ?? "Unknown",
-                                              doc["price"] ?? "0",
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: FavoriteIcon(),
-                                        onPressed: () {
-                                          toggleFavorite(
-                                            Book(
-                                              id: doc.id,
-                                              title: doc["name"] ?? "Unknown",
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                              
                             ],
                           ),
                         ),
@@ -316,3 +323,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+class FavoriteService {
+}
+
+

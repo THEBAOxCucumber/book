@@ -168,7 +168,7 @@ class _LoginScreen extends State<LoginScreen> {
                     onPressed:
                         _isLoading ? null : () => _handleLogin(email, password),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor:  Color(0xFF103F91),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -220,8 +220,8 @@ class _LoginScreen extends State<LoginScreen> {
                               );
                             },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      side: BorderSide(color: Colors.blue),
+                      foregroundColor:  Color(0xFF103F91),
+                      side: BorderSide(color:  Color(0xFF103F91)),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -245,7 +245,7 @@ class _LoginScreen extends State<LoginScreen> {
                   },
                   child: Text(
                     'ลืมรหัสผ่าน?',
-                    style: TextStyle(color: Colors.blue[600], fontSize: 14),
+                    style: TextStyle(color:  Color(0xFF103F91), fontSize: 14),
                   ),
                 ),
               ],

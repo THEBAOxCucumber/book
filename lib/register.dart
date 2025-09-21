@@ -78,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text('สมัครสมาชิก'),
-        backgroundColor: Colors.green,
+        backgroundColor:  Color(0xFF103F91),
         foregroundColor: Colors.white,
         centerTitle: true,
         elevation: 0,
@@ -102,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Icon(
                     Icons.person_add,
                     size: 60,
-                    color: Colors.green,
+                    color:  Color(0xFF103F91),
                   ),
                 ),
                 
@@ -250,7 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _handleRegister,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor:  Color(0xFF103F91),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -292,7 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Text(
                     'เข้าสู่ระบบ',
                     style: TextStyle(
-                      color: Colors.blue[600],
+                      color:  Color(0xFF103F91),
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

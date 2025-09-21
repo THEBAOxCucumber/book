@@ -5,12 +5,14 @@ class CartItem {
   final String id;
   final String title;
   final double price;
+  // final String image;
   int quantity;
 
   CartItem({
     required this.id,
     required this.title,
     required this.price,
+    // required this.image,
     this.quantity = 1,
   });
 }
@@ -36,6 +38,7 @@ class CartProvider with ChangeNotifier {
           id: existing.id,
           title: existing.title,
           price: existing.price,
+          // image: existing.image,
           quantity: existing.quantity + 1,
         ),
       );
@@ -53,6 +56,7 @@ class CartProvider with ChangeNotifier {
           id: existing.id,
           title: existing.title,
           price: existing.price,
+          // image: existing.image,
           quantity: existing.quantity - 1,
         ),
       );
@@ -70,6 +74,7 @@ class CartProvider with ChangeNotifier {
           id: existing.id,
           title: existing.title,
           price: existing.price,
+          // image: existing.image,
           quantity: existing.quantity + 1,
         ),
       );
@@ -80,6 +85,7 @@ class CartProvider with ChangeNotifier {
           id: productId,
           title: title,
           price: price,
+          // image: image,
           quantity: 1,
         ),
       );

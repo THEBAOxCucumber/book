@@ -2,50 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'book.dart';
+import 'favoriteservice.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});
 
-  // Get current user
   User? get user => FirebaseAuth.instance.currentUser;
 
-  // Stream all favorite books (by ID & title)
+  // ดึงข้อมูล favorites ทั้งหมดของ user
   Stream<List<Book>> getFavorites() {
-    if (user == null) return const Stream.empty();
+    if (user == null) return Stream.empty();
 
     return FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
         .collection("favorites")
-        .orderBy("createdAt", descending: true)
+        .where("email", isEqualTo: user!.email) // เอาเฉพาะของ user นี้
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              return Book(
-                id: doc.id,
-                title: doc["title"] ?? "Untitled",
-              );
-            }).toList());
-  }
-
-  // Toggle add/remove favorite
-  Future<void> toggleFavorite(Book book) async {
-    if (user == null) return;
-
-    final docRef = FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
-        .collection("favorites")
-        .doc(book.id);
-
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      await docRef.delete();
-    } else {
-      await docRef.set({
-        "title": book.title,
-        "createdAt": FieldValue.serverTimestamp(),
-      });
-    }
+        .map(
+          (snapshot) =>
+              snapshot.docs
+                  .map((doc) => Book.fromFirestore(doc.id, doc.data()))
+                  .toList(),
+        );
   }
 
   @override
@@ -73,13 +50,54 @@ class FavoritePage extends StatelessWidget {
             itemBuilder: (context, index) {
               final book = favorites[index];
               return Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: ListTile(
-                  title: Text(book.title),
+                  title: Text(book.name.isNotEmpty ? book.name : '-'),
+                  leading:
+                      book.image != null
+                          ? Image.network(
+                            book.image!,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          )
+                          : const Icon(Icons.book, size: 50),
+                  subtitle: Text(
+                    'ราคา: ${book.price?.toStringAsFixed(2) ?? '-'} THB',
+                  ),
                   trailing: IconButton(
                     icon: const Icon(Icons.favorite, color: Colors.red),
-                    onPressed: () => toggleFavorite(book),
+                    onPressed: () async {
+                      // ยืนยันก่อนลบ
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              title: const Text('ลบรายการโปรด'),
+                              content: const Text(
+                                'คุณต้องการลบหนังสือเล่มนี้ออกจากรายการโปรดหรือไม่?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.pop(context, false),
+                                  child: const Text('ยกเลิก'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('ลบ'),
+                                ),
+                              ],
+                            ),
+                      );
+
+                      if (confirm == true) {
+                        await FirebaseFirestore.instance
+                            .collection('favorites')
+                            .doc(book.id) // ใช้ id ของเอกสาร favorites
+                            .delete();
+                      }
+                    },
                   ),
                 ),
               );
@@ -90,4 +108,3 @@ class FavoritePage extends StatelessWidget {
     );
   }
 }
-

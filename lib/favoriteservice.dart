@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FavoriteIcon extends StatefulWidget {
-  const FavoriteIcon({super.key});
+  final String bookId;     // id หนังสือ
+  final String name;      // ชื่อหนังสือ
+  final double price;    // ราคาหนังสือ
+  final String image;  // รูปหนังสือ (ถ้ามี)
+
+  const FavoriteIcon({
+    super.key,
+    required this.bookId,
+    required this.name,
+    required this.price,
+    required this.image,
+  });
 
   @override
   State<FavoriteIcon> createState() => _FavoriteIconState();
@@ -9,11 +22,60 @@ class FavoriteIcon extends StatefulWidget {
 
 class _FavoriteIconState extends State<FavoriteIcon> {
   bool _isFavorite = false;
+  final user = FirebaseAuth.instance.currentUser;
 
-  void _toggleFavorite() {
-    setState(() {
-      _isFavorite = !_isFavorite;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _checkFavorite();
+  }
+
+  /// ตรวจสอบว่าหนังสือนี้ถูกกดหัวใจไปแล้วหรือยัง
+  Future<void> _checkFavorite() async {
+    if (user == null) return;
+
+    final docRef = FirebaseFirestore.instance
+        .collection("favorites")
+        .doc(widget.bookId);
+
+    final snapshot = await docRef.get();
+    if (snapshot.exists) {
+      setState(() {
+        _isFavorite = true;
+      });
+    }
+  }
+
+  /// กดหัวใจ -> toggle favorite
+  Future<void> _toggleFavorite() async {
+    if (user == null) return;
+
+    final docRef = FirebaseFirestore.instance
+        .collection("favorites")
+        .doc(widget.bookId);
+
+    final snapshot = await docRef.get();
+
+    if (snapshot.exists) {
+      // ลบออก
+      await docRef.delete();
+      setState(() {
+        _isFavorite = false;
+      });
+    } else {
+      // เพิ่มเข้า favorites
+      await docRef.set({
+        "bookId": widget.bookId,
+        "name": widget.name,
+        "email": user!.email,
+        "price": widget.price,
+        "image": widget.image,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+      setState(() {
+        _isFavorite = true;
+      });
+    }
   }
 
   @override
