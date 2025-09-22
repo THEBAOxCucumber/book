@@ -76,7 +76,7 @@ class _MyDrawer extends State<MyDrawer> {
               );
             },
           ),
-          AuthenticationService().getEmail() == "Guest"
+          AuthenticationService().getEmail() == "Guest" || AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
               ? const SizedBox.shrink()
               : ListTile(
             enabled: email != "Guest",
@@ -94,6 +94,9 @@ class _MyDrawer extends State<MyDrawer> {
               );
             },
           ),
+
+         
+
           ListTile(
             selected: _selectedIndex == 2,
             leading: const Icon(Icons.groups),
@@ -104,6 +107,25 @@ class _MyDrawer extends State<MyDrawer> {
                 MaterialPageRoute(
                   builder:
                       (_) => CreditPage(onToggleTheme: widget.onToggleTheme),
+                ),
+              );
+            },
+          ),
+
+           AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
+              ? const SizedBox.shrink()
+              : ListTile(
+            // enabled: email != "phiriyaporn.y@ku.th",
+            selected: _selectedIndex == 3,
+            leading: const Icon(Icons.book),
+            title: const Text('เพิ่มหนังสือ'),
+            onTap: () {
+              _onItemTapped(3);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => BookTellScreen(onToggleTheme: widget.onToggleTheme,),
                 ),
               );
             },

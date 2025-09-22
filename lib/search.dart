@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'authenticationService.dart';
+import 'cart.dart';
+import 'package:provider/provider.dart';
+import 'book.dart';
+import 'favoriteservice.dart';
+import 'edit.dart';
+
 
 class SearchPage extends StatefulWidget {
   SearchPage({super.key});
@@ -18,6 +25,23 @@ class _SearchPageState extends State<SearchPage> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> toggleFavorite(Book book) async {
+    final docRef = FirebaseFirestore.instance
+        .collection("favorites")
+        .doc(book.id);
+
+    final snapshot = await docRef.get();
+    if (snapshot.exists) {
+      await docRef.delete();
+    } else {
+      await docRef.set({
+        "itemId": book.id,
+        "name": book.name,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+    }
   }
 
   @override
@@ -85,36 +109,214 @@ class _SearchPageState extends State<SearchPage> {
                 onTap: () {
                   // แสดงรายละเอียดหนังสือ
                   showDialog(
-                    context: context,
-                    builder:
-                        (_) => AlertDialog(
-                          title: Text(doc['name']),
-                          content: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  doc['image'],
-                                  height: 300,
-                                  fit: BoxFit.cover,
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(doc['name']),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.network(doc['image'], height: 300, fit: BoxFit.cover),
+                  const SizedBox(height: 10),
+                  Text('ราคา: ${doc['price']} THB'),
+                  Text('ผู้เขียน: ${doc['author']}'),
+                  Text('สำนักพิมพ์: ${doc['publisher']}'),
+                  const SizedBox(height: 10),
+                  Text(doc['review']),
+                ],
+              ),
+            ),
+            actions: [
+              AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
+                  ? AuthenticationService().getEmail() == "Guest"
+                      ? const SizedBox.shrink()
+                      : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF780C28),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
                                 ),
-                                const SizedBox(height: 10),
-                                Text('ราคา: ${doc['price']} THB'),
-                                Text('ผู้เขียน: ${doc['author']}'),
-                                Text('สำนักพิมพ์: ${doc['publisher']}'),
-                                const SizedBox(height: 10),
-                                Text(doc['review']),
-                              ],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text('Delete'),
+                              onPressed: () async {
+                                // แสดง Dialog ยืนยัน
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        title: const Text('ลบหนังสือ'),
+                                        content: const Text(
+                                          'คุณต้องการลบหนังสือเล่มนี้หรือไม่?',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  false,
+                                                ),
+                                            child: const Text('ยกเลิก'),
+                                          ),
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  true,
+                                                ),
+                                            child: const Text('ลบ'),
+                                          ),
+                                        ],
+                                      ),
+                                );
+
+                                // ถ้ากด "ลบ"
+                                if (confirm == true) {
+                                  await FirebaseFirestore.instance
+                                      .collection('booktells')
+                                      .doc(doc.id) // ใช้ id ของ document
+                                      .delete();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('ลบหนังสือเรียบร้อยแล้ว'),
+                                    ),
+                                  );
+                                }
+
+                                Navigator.pop(context);
+                              },
                             ),
                           ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('ปิด'),
+
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF0C783D),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text('Edit'),
+                              onPressed: () async {
+                                // แสดง Dialog ยืนยัน
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        title: const Text('แก้ไขหนังสือ'),
+                                        content: const Text(
+                                          'คุณต้องการแก้ไขหนังสือเล่มนี้หรือไม่?',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  false,
+                                                ),
+                                            child: const Text('ยกเลิก'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(
+                                                context,
+                                                true,
+                                              ); // ปิด Dialog แล้ว return true
+                                            },
+                                            child: const Text('แก้ไข'),
+                                          ),
+                                        ],
+                                      ),
+                                );
+
+                                // ถ้ากด "แก้ไข"
+                                if (confirm == true) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => EditBookPage(
+                                            docid: doc.id,
+                                          ), // ✅ ส่ง docId
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                          ],
+                          ),
+                        ],
+                      )
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF103F91),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Add to cart'),
+                          onPressed: () {
+                            Provider.of<CartProvider>(
+                              context,
+                              listen: false,
+                            ).addItem(
+                              doc.id,
+                              doc["name"] ?? "Unknown",
+                              doc["price"] ?? "0",
+                            );
+                          },
                         ),
-                  );
+                      ),
+                      IconButton(
+                        icon: FavoriteIcon(
+                          bookId: doc.id,
+                          image: doc["image"] ?? "",
+                          name: doc["name"] ?? "Unknown",
+                          price: doc["price"]?.toDouble() ?? 0.0,
+                        ),
+                        onPressed: () {
+                          toggleFavorite(
+                            Book(
+                              id: doc.id,
+                              name: doc["name"] ?? "Unknown",
+                              price: doc["price"]?.toDouble() ?? 0.0,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('ปิด'),
+              ),
+            ],
+          ),
+    );
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

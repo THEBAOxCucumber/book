@@ -11,6 +11,7 @@ import 'cart.dart';
 import 'package:provider/provider.dart';
 import 'book.dart';
 import 'favoriteservice.dart';
+import 'edit.dart';
 
 final List<Book> books = [
   Book(id: "1", name: "Book A"),
@@ -41,10 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> toggleFavorite(Book book) async {
-    final user = FirebaseAuth.instance.currentUser;
     final docRef = FirebaseFirestore.instance
-        .collection("users")
-        .doc(user!.uid)
         .collection("favorites")
         .doc(book.id);
 
@@ -80,64 +78,225 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(height: 10),
                   Text(doc['review']),
                 ],
-                
-
               ),
             ),
             actions: [
-
-               AuthenticationService().getEmail() == "Guest"
-                                  ? const SizedBox.shrink()
-                                  : Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color(0xFF103F91),    
-                                            foregroundColor: Colors.white,
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 8,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
+              AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
+                  ? AuthenticationService().getEmail() == "Guest"
+                      ? const SizedBox.shrink()
+                      : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF780C28),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text('Delete'),
+                              onPressed: () async {
+                                // แสดง Dialog ยืนยัน
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        title: const Text('ลบหนังสือ'),
+                                        content: const Text(
+                                          'คุณต้องการลบหนังสือเล่มนี้หรือไม่?',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  false,
+                                                ),
+                                            child: const Text('ยกเลิก'),
                                           ),
-                                          child: const Text('Add to cart'),
-                                          onPressed: () {
-                                            Provider.of<CartProvider>(
-                                              context,
-                                              listen: false,
-                                            ).addItem(
-                                              doc.id,
-                                              doc["name"] ?? "Unknown",
-                                              doc["price"] ?? "0",
-                                            );
-                                          },
-                                        ),
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  true,
+                                                ),
+                                            child: const Text('ลบ'),
+                                          ),
+                                        ],
                                       ),
-                                      IconButton(
-                                        icon: FavoriteIcon(
-                                          bookId: doc.id,
-                                          image: doc["image"] ?? "",
-                                          name: doc["name"] ?? "Unknown",
-                                          price: doc["price"]?.toDouble() ?? 0.0,
-                                        ),
-                                        onPressed: () {
-                                          toggleFavorite(
-                                            Book(
-                                              id: doc.id,
-                                              name: doc["name"] ?? "Unknown",
-                                              price: doc["price"]?.toDouble() ?? 0.0,
-                                            ),
-                                          );
-                                        },
+                                );
+
+                                // ถ้ากด "ลบ"
+                                if (confirm == true) {
+                                  await FirebaseFirestore.instance
+                                      .collection('booktells')
+                                      .doc(doc.id) // ใช้ id ของ document
+                                      .delete();
+
+                                  final favQuery =
+                                      await FirebaseFirestore.instance
+                                          .collection('favorites')
+                                          .where('bookId', isEqualTo: doc.id)
+                                          .get();
+
+                                  for (var favDoc in favQuery.docs) {
+                                    await favDoc.reference.delete();
+                                  }
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'ลบหนังสือและ favorites ของทุกคนเรียบร้อยแล้ว',
                                       ),
-                                    ],
+                                    ),
+                                  );
+                                }
+
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF0C783D),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text('Edit'),
+                              onPressed: () async {
+                                // แสดง Dialog ยืนยัน
+                                final confirm = await showDialog<bool>(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        title: const Text('แก้ไขหนังสือ'),
+                                        content: const Text(
+                                          'คุณต้องการแก้ไขหนังสือเล่มนี้หรือไม่?',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () => Navigator.pop(
+                                                  context,
+                                                  false,
+                                                ),
+                                            child: const Text('ยกเลิก'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(
+                                                context,
+                                                true,
+                                              ); // ปิด Dialog แล้ว return true
+                                            },
+                                            child: const Text('แก้ไข'),
+                                          ),
+                                        ],
+                                      ),
+                                );
+
+                                // ถ้ากด "แก้ไข"
+                                if (confirm == true) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => EditBookPage(
+                                            docid: doc.id,
+                                          ), // ✅ ส่ง docId
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF103F91),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Add to cart'),
+                          onPressed: () {
+                            final userEmail =
+                                AuthenticationService().getEmail();
+
+                            if (userEmail == "Guest") {
+                              // ยังไม่ได้ login -> แจ้งเตือน
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'กรุณาเข้าสู่ระบบก่อนเพิ่มสินค้าในตะกร้า',
                                   ),
+                                ),
+                              );
+                            } else {
+                              // เพิ่มเข้าสู่ cart
+                              Provider.of<CartProvider>(
+                                context,
+                                listen: false,
+                              ).addItem(
+                                doc.id,
+                                doc["name"] ?? "Unknown",
+                                doc["price"] ?? "0",
+                              );
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('เพิ่มสินค้าเรียบร้อยแล้ว'),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+
+                      IconButton(
+                        icon: FavoriteIcon(
+                          bookId: doc.id,
+                          image: doc["image"] ?? "",
+                          name: doc["name"] ?? "Unknown",
+                          price: doc["price"]?.toDouble() ?? 0.0,
+                        ),
+                        onPressed: () {
+                          toggleFavorite(
+                            Book(
+                              id: doc.id,
+                              name: doc["name"] ?? "Unknown",
+                              price: doc["price"]?.toDouble() ?? 0.0,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('ปิด'),
@@ -307,8 +466,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-
-                              
                             ],
                           ),
                         ),
@@ -324,7 +481,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class FavoriteService {
-}
-
-
+class FavoriteService {}

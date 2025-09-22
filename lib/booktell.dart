@@ -8,19 +8,6 @@ class BookTellScreen extends StatefulWidget {
   final VoidCallback onToggleTheme;
   const BookTellScreen({super.key, required this.onToggleTheme});
 
-  // ฟังก์ชันออกจากระบบ
-  // Future<void> _logout(BuildContext context) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.remove('isLoggedIn');
-
-  //   if (context.mounted) {
-  //     Navigator.of(context).pushAndRemoveUntil(
-  //       MaterialPageRoute(builder: (context) => const LoginScreen()),
-  //       (Route<dynamic> route) => false,
-  //     );
-  //   }
-  // }
-
   @override
   _BookTellState createState() => _BookTellState();
 }
@@ -28,8 +15,8 @@ class BookTellScreen extends StatefulWidget {
 class _BookTellState extends State<BookTellScreen> {
   final formkey = GlobalKey<FormState>();
   BookDetails myBooktell = BookDetails();
-  CollectionReference booktellCollection = FirebaseFirestore.instance
-      .collection('booktells');
+  CollectionReference booktellCollection =
+      FirebaseFirestore.instance.collection('booktells');
 
   final fieldBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(12),
@@ -38,6 +25,7 @@ class _BookTellState extends State<BookTellScreen> {
 
   Widget _buildTextField({
     required String label,
+    required IconData icon,
     String? hint,
     required FormFieldSetter<String> onSaved,
     String? Function(String?)? validator,
@@ -45,62 +33,40 @@ class _BookTellState extends State<BookTellScreen> {
     int minLines = 1,
     int? maxLines = 1,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: Icon(icon, color: const Color(0xFF103F91)),
+          filled: true,
+          fillColor: Colors.grey[100],
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          border: fieldBorder,
+          enabledBorder: fieldBorder,
+          focusedBorder: fieldBorder.copyWith(
+            borderSide: const BorderSide(color: Color(0xFF103F91), width: 2),
           ),
         ),
-        const SizedBox(height: 6),
-        TextFormField(
-          decoration: InputDecoration(
-            hintText: hint,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            border: fieldBorder,
-            enabledBorder: fieldBorder,
-            focusedBorder: fieldBorder.copyWith(
-              borderSide: const BorderSide(color: Color(0xFF103F91), width: 2),
-            ),
-          ),
-          keyboardType: keyboardType,
-          validator: validator,
-          onSaved: onSaved,
-          minLines: minLines,
-          maxLines: maxLines,
-        ),
-        const SizedBox(height: 20),
-      ],
+        keyboardType: keyboardType,
+        validator: validator,
+        onSaved: onSaved,
+        minLines: minLines,
+        maxLines: maxLines,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: const Color(0xFFF7F8FA),
       appBar: AppBar(
-        title: const Text('BookTell'),
-        backgroundColor: Theme.of(context).primaryColor,
-        actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.logout),
-          //   onPressed: () => widget._logout(context),
-          // ),
-          IconButton(
-                icon: Icon(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Icons.wb_sunny
-                      : Icons.nightlight_round,
-                ),
-                onPressed: widget.onToggleTheme,
-              ),
-        ],
+        title: const Text('เพิ่มหนังสือใหม่'),
+        backgroundColor: const Color(0xFF103F91),
+        
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -109,57 +75,64 @@ class _BookTellState extends State<BookTellScreen> {
           child: Column(
             children: [
               _buildTextField(
-                label: "Name Book",
+                label: "ชื่อหนังสือ",
                 hint: "เช่น ความทรงจำครั้งที่ร้าว",
+                icon: Icons.book,
                 onSaved: (val) => myBooktell.name = val ?? '',
                 validator:
                     RequiredValidator(errorText: "กรุณาป้อนชื่อหนังสือ").call,
               ),
               _buildTextField(
-                label: "Image",
-                hint: "ที่อยู่รูปภาพ",
+                label: "รูปภาพ",
+                hint: "URL รูปภาพหนังสือ",
+                icon: Icons.image,
                 onSaved: (val) => myBooktell.image = val ?? '',
                 validator:
                     RequiredValidator(errorText: "กรุณาป้อนที่อยู่รูปภาพ").call,
               ),
               _buildTextField(
-                label: "Author",
-                hint: "ชื่อผู้เขียน",
+                label: "ผู้เขียน",
+                hint: "เช่น มนัส จรรยงค์",
+                icon: Icons.person,
                 onSaved: (val) => myBooktell.author = val ?? '',
                 validator:
                     RequiredValidator(errorText: "กรุณาป้อนชื่อผู้เขียน").call,
               ),
               _buildTextField(
-                label: "Publisher",
+                label: "สำนักพิมพ์",
                 hint: "ชื่อสำนักพิมพ์",
+                icon: Icons.business,
                 onSaved: (val) => myBooktell.publisher = val ?? '',
                 validator:
-                    RequiredValidator(
-                      errorText: "กรุณาป้อนชื่อสำนักพิมพ์",
-                    ).call,
+                    RequiredValidator(errorText: "กรุณาป้อนชื่อสำนักพิมพ์")
+                        .call,
               ),
               _buildTextField(
-                label: "Price (THB)",
+                label: "ราคา (THB)",
                 hint: "เช่น 250",
+                icon: Icons.attach_money,
                 keyboardType: TextInputType.number,
                 onSaved: (val) => myBooktell.price = int.parse(val ?? '0'),
                 validator: RequiredValidator(errorText: "กรุณาป้อนราคา").call,
               ),
-
               _buildTextField(
-                label: "Review",
+                label: "รีวิว",
                 hint: "เขียนรีวิวสั้นๆ",
+                icon: Icons.rate_review,
                 onSaved: (val) => myBooktell.review = val ?? '',
-                validator: RequiredValidator(errorText: "กรุณาป้อนรีวิว").call,
+                validator:
+                    RequiredValidator(errorText: "กรุณาป้อนรีวิว").call,
                 minLines: 4,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
+
+              // ปุ่ม Submit
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF103F91),
                     foregroundColor: Colors.white,
@@ -167,8 +140,11 @@ class _BookTellState extends State<BookTellScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    elevation: 4,
                   ),
-                  child: const Text('Submit', style: TextStyle(fontSize: 18)),
+                  icon: const Icon(Icons.save),
+                  label: const Text('บันทึกข้อมูล',
+                      style: TextStyle(fontSize: 18)),
                   onPressed: () async {
                     if (formkey.currentState!.validate()) {
                       formkey.currentState!.save();
@@ -182,9 +158,12 @@ class _BookTellState extends State<BookTellScreen> {
                       });
                       formkey.currentState!.reset();
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('บันทึกข้อมูลเรียบร้อย')),
-                      );
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('บันทึกข้อมูลเรียบร้อย')),
+                        );
+                      }
                     }
                   },
                 ),
@@ -193,7 +172,7 @@ class _BookTellState extends State<BookTellScreen> {
           ),
         ),
       ),
-      drawer: MyDrawer(onToggleTheme: widget.onToggleTheme)
+      drawer: MyDrawer(onToggleTheme: widget.onToggleTheme),
     );
   }
 }
