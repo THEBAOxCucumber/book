@@ -15,6 +15,9 @@ import 'favoriteservice.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final cartProvider = CartProvider();
+  await cartProvider.loadCart(); // ✅ โหลดก่อน runApp
   
 
   final prefs = await SharedPreferences.getInstance();
@@ -24,10 +27,11 @@ void main() async {
   final VoidCallback onToggleTheme;
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => CartProvider(),
-      child:
-    MyApp(isDarkMode: isDarkMode, isLoggedIn: loggedIn, /*onToggleTheme: onToggleTheme,*/)));
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: cartProvider),
+      ],
+      child: MyApp(isDarkMode: isDarkMode, isLoggedIn: loggedIn, /*onToggleTheme: onToggleTheme,*/)));
 }
 
 class MyApp extends StatefulWidget {

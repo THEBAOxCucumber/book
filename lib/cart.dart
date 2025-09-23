@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 
 class CartItem {
@@ -26,10 +28,7 @@ class CartItem {
 
 class CartProvider with ChangeNotifier {
   final Map<String, CartItem> _items = {};
-
   Map<String, CartItem> get items => _items;
-
-  
 
   double get totalAmount {
     double total = 0.0;
@@ -39,7 +38,37 @@ class CartProvider with ChangeNotifier {
     return total;
   }
 
-  
+Future<void> _saveCart() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cartData = _items.map((key, item) => MapEntry(
+      key,
+      {
+        'orderid': item.orderid,
+        'name': item.name,
+        'price': item.price,
+        'quantity': item.quantity,
+      },
+    ));
+    await prefs.setString('cart_items', jsonEncode(cartData));
+  }
+
+    Future<void> loadCart() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('cart_items');
+    if (data == null) return;
+
+    final decoded = jsonDecode(data) as Map<String, dynamic>;
+    _items.clear();
+    decoded.forEach((key, value) {
+      _items[key] = CartItem(
+        orderid: value['orderid'],
+        name: value['name'],
+        price: (value['price'] as num).toDouble(),
+        quantity: value['quantity'],
+      );
+    });
+    notifyListeners();
+  }
 
   void increaseQuantity(String productId) {
     if (_items.containsKey(productId)) {
@@ -53,6 +82,7 @@ class CartProvider with ChangeNotifier {
           quantity: existing.quantity + 1,
         ),
       );
+      _saveCart();
       notifyListeners();
     }
   }
@@ -74,6 +104,7 @@ class CartProvider with ChangeNotifier {
     } else {
       _items.remove(productId);
     }
+    _saveCart();
     notifyListeners();
   }
 
@@ -101,16 +132,19 @@ class CartProvider with ChangeNotifier {
         ),
       );
     }
+    _saveCart();
     notifyListeners();
   }
 
   void removeItem(String productId) {
     _items.remove(productId);
+    _saveCart();
     notifyListeners();
   }
 
   void clear() {
     _items.clear();
+    _saveCart();
     notifyListeners();
   }
 }

@@ -352,7 +352,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 onPressed: widget.onToggleTheme,
               ),
-              AuthenticationService().getEmail() != "Guest"
+              AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
+              ? AuthenticationService().getEmail() != "Guest" 
                   ? IconButton(
                     icon: const Icon(Icons.shopping_cart, color: Colors.white),
                     onPressed: () {
@@ -389,7 +390,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       );
                     },
-                  ),
+                  )
+                  : const SizedBox.shrink(),
+                  
               SizedBox(width: 10),
               //   ElevatedButton(
               //   child: Text("Login"),
