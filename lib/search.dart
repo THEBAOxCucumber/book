@@ -279,14 +279,35 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                           child: const Text('Add to cart'),
                           onPressed: () {
-                            Provider.of<CartProvider>(
-                              context,
-                              listen: false,
-                            ).addItem(
-                              doc.id,
-                              doc["name"] ?? "Unknown",
-                              doc["price"] ?? "0",
-                            );
+                            final userEmail =
+                                AuthenticationService().getEmail();
+
+                            if (userEmail == "Guest") {
+                              // ยังไม่ได้ login -> แจ้งเตือน
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'กรุณาเข้าสู่ระบบก่อนเพิ่มสินค้าในตะกร้า',
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // เพิ่มเข้าสู่ cart
+                              Provider.of<CartProvider>(
+                                context,
+                                listen: false,
+                              ).addItem(
+                                doc.id,
+                                doc["name"] ?? "Unknown",
+                                doc["price"] ?? "0",
+                              );
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('เพิ่มสินค้าเรียบร้อยแล้ว'),
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),

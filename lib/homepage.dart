@@ -29,6 +29,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
   final Future<FirebaseApp> booktell = Firebase.initializeApp();
   final VoidCallback onToggleTheme;
   final favoriteService = FavoriteService();
@@ -357,7 +358,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => CartPage()),
+                        MaterialPageRoute(builder: (_) => const CartPage()),
                       );
                     },
                   )
