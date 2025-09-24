@@ -18,6 +18,7 @@ class _EditBookPageState extends State<EditBookPage> {
   final TextEditingController _imageController = TextEditingController();
   final TextEditingController _publisherController = TextEditingController();
   final TextEditingController _reviewController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
 
   bool _loading = true;
 
@@ -42,6 +43,7 @@ class _EditBookPageState extends State<EditBookPage> {
         _imageController.text = data['image'] ?? '';
         _publisherController.text = data['publisher'] ?? '';
         _reviewController.text = data['review'] ?? '';
+        _quantityController.text = data['quantity']?.toString() ?? '';
       }
     } catch (e) {
       debugPrint("Error loading book: $e");
@@ -66,6 +68,7 @@ class _EditBookPageState extends State<EditBookPage> {
         'image': _imageController.text,
         'publisher': _publisherController.text,
         'review': _reviewController.text,
+        'quantity' : _quantityController.text,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -166,6 +169,15 @@ class _EditBookPageState extends State<EditBookPage> {
                       validator: (v) =>
                           v == null || v.isEmpty ? "กรอกรีวิว" : null,
                     ),
+                    // const SizedBox(height: 16),
+                    // _buildTextField(
+                    //   controller: _quantityController,
+                    //   label: "จำนวนหนังสือ",
+                    //   icon: Icons.star,
+                    //   inputType: TextInputType.number,
+                    //   validator: (v) =>
+                    //       v == null || v.isEmpty ? "กรอกจำนวนหนังสือ" : null,
+                    // ),
                     const SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,

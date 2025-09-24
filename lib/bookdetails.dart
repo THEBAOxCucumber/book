@@ -5,6 +5,7 @@ class BookDetails {
   String? publisher;
   int? price;
   String? review;
+  
 
   BookDetails({
     this.name,

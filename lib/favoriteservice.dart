@@ -32,51 +32,49 @@ class _FavoriteIconState extends State<FavoriteIcon> {
 
   /// ตรวจสอบว่าหนังสือนี้ถูกกดหัวใจไปแล้วหรือยัง
   Future<void> _checkFavorite() async {
-    if (user == null) return;
+  if (user == null) return;
 
-    final docRef = FirebaseFirestore.instance
-        .collection("favorites")
-        .doc(widget.bookId);
+  final docRef = FirebaseFirestore.instance
+      .collection("favorites")
+      .doc('${user!.email}_${widget.bookId}');
 
-    final snapshot = await docRef.get();
-    if (snapshot.exists) {
-      setState(() {
-        _isFavorite = true;
-      });
-    }
-  }
+  final snapshot = await docRef.get();
+  setState(() {
+    _isFavorite = snapshot.exists;
+  });
+}
+
 
   /// กดหัวใจ -> toggle favorite
   Future<void> _toggleFavorite() async {
-    if (user == null) return;
+  if (user == null) return;
 
-    final docRef = FirebaseFirestore.instance
-        .collection("favorites")
-        .doc(widget.bookId);
+  final docRef = FirebaseFirestore.instance
+      .collection("favorites")
+      .doc('${user!.email}_${widget.bookId}');
 
-    final snapshot = await docRef.get();
+  final snapshot = await docRef.get();
 
-    if (snapshot.exists) {
-      // ลบออก
-      await docRef.delete();
-      setState(() {
-        _isFavorite = false;
-      });
-    } else {
-      // เพิ่มเข้า favorites
-      await docRef.set({
-        "bookId": widget.bookId,
-        "name": widget.name,
-        "email": user!.email,
-        "price": widget.price,
-        "image": widget.image,
-        "createdAt": FieldValue.serverTimestamp(),
-      });
-      setState(() {
-        _isFavorite = true;
-      });
-    }
+  if (snapshot.exists) {
+    await docRef.delete();
+    setState(() {
+      _isFavorite = false;
+    });
+  } else {
+    await docRef.set({
+      "bookId": widget.bookId,
+      "name": widget.name,
+      "email": user!.email, // เฉพาะ user
+      "price": widget.price,
+      "image": widget.image,
+      "createdAt": FieldValue.serverTimestamp(),
+    });
+    setState(() {
+      _isFavorite = true;
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

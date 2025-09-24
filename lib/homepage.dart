@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   Image.network(doc['image'], height: 300, fit: BoxFit.cover),
                   const SizedBox(height: 10),
-                  Text('ราคา: ${doc['price']} THB'),
+                  Text('ราคา: ${doc['price']} บาท'),
                   Text('ผู้เขียน: ${doc['author']}'),
                   Text('สำนักพิมพ์: ${doc['publisher']}'),
                   const SizedBox(height: 10),

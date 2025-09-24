@@ -10,21 +10,27 @@ class CartItem {
   final String orderid;
   final String name;
   final double price;
-
-  // final String image;
   int quantity;
 
   CartItem({
     required this.orderid,
     required this.name,
     required this.price,
-
-    // required this.image,
     this.quantity = 1,
   });
 
-  
+  double get total => price * quantity;
+
+  Map<String, dynamic> toMap() => {
+    'orderid': orderid,
+    'name': name,
+    'price': price,
+    'quantity': quantity,
+  };
 }
+
+
+
 
 class CartProvider with ChangeNotifier {
   final Map<String, CartItem> _items = {};
@@ -220,8 +226,8 @@ class CartPage extends StatelessWidget {
                               child: ListTile(
                                 title: Text(item.name),
                                 subtitle: Text(
-                                  "฿${item.price.toStringAsFixed(2)}",
-                                ),
+    "฿${(item.price * item.quantity).toStringAsFixed(2)}",
+  ),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -260,13 +266,13 @@ class CartPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Total: ฿${cart.totalAmount.toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    // Text(
+                    //   "Total: ฿${cart.totalAmount.toStringAsFixed(2)}",
+                    //   style: const TextStyle(
+                    //     fontSize: 18,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(

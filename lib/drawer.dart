@@ -6,6 +6,8 @@ import 'authenticationService.dart';
 import 'loginpage.dart';
 import 'credit.dart';
 import 'booktell.dart';
+import 'order.dart';
+import 'exorder.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key, required this.onToggleTheme});
@@ -131,6 +133,42 @@ class _MyDrawer extends State<MyDrawer> {
             },
           ),
 
+           AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
+              ? const SizedBox.shrink()
+              : ListTile(
+            // enabled: email != "phiriyaporn.y@ku.th",
+            selected: _selectedIndex == 4,
+            leading: const Icon(Icons.shopping_basket),
+            title: const Text('คำสั่งซื้อ'),
+            onTap: () {
+              _onItemTapped(3);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => OrderPage(),
+                ),
+              );
+            },
+          ),
+  AuthenticationService().getEmail() == "Guest" || AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
+              ? const SizedBox.shrink()
+              : ListTile(
+            enabled: email != "Guest",
+            selected: _selectedIndex == 5,
+            leading: const Icon(Icons.shopping_basket),
+            title: const Text('ประวัติการสั่งซื้อ'),
+            onTap: () {
+              _onItemTapped(1);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (_) => OrderHistoryPage(),
+                ),
+              );
+            },
+          ),
           // ----- เตือน: แก้เงื่อนไขว่าจะแสดงตอน login email อะไร
           // ListTile(
           //   selected: _selectedIndex == 3,
