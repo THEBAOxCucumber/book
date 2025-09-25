@@ -10,12 +10,14 @@ class CartItem {
   final String orderid;
   final String name;
   final double price;
+  final String image;
   int quantity;
 
   CartItem({
     required this.orderid,
     required this.name,
     required this.price,
+  required this.image,
     this.quantity = 1,
   });
 
@@ -24,12 +26,11 @@ class CartItem {
   Map<String, dynamic> toMap() => {
     'orderid': orderid,
     'name': name,
+    'image' : image,
     'price': price,
     'quantity': quantity,
   };
 }
-
-
 
 
 class CartProvider with ChangeNotifier {
@@ -50,6 +51,7 @@ Future<void> _saveCart() async {
       key,
       {
         'orderid': item.orderid,
+        'image' :item.image,
         'name': item.name,
         'price': item.price,
         'quantity': item.quantity,
@@ -68,6 +70,7 @@ Future<void> _saveCart() async {
     decoded.forEach((key, value) {
       _items[key] = CartItem(
         orderid: value['orderid'],
+        image: value['image'],
         name: value['name'],
         price: (value['price'] as num).toDouble(),
         quantity: value['quantity'],
@@ -82,6 +85,7 @@ Future<void> _saveCart() async {
         productId,
         (existing) => CartItem(
           orderid: existing.orderid,
+          image: existing.image,
           name: existing.name,
           price: existing.price,
           // image: existing.image,
@@ -101,6 +105,7 @@ Future<void> _saveCart() async {
         productId,
         (existing) => CartItem(
           orderid: existing.orderid,
+          image: existing.image,
           name: existing.name,
           price: existing.price,
           // image: existing.image,
@@ -114,12 +119,13 @@ Future<void> _saveCart() async {
     notifyListeners();
   }
 
-  void addItem(String productId, String title, double price) {
+  void addItem(String productId, String title, double price , String image) {
     if (_items.containsKey(productId)) {
       _items.update(
         productId,
         (existing) => CartItem(
           orderid: existing.orderid,
+          image: existing.image,
           name: existing.name,
           price: existing.price,
           // image: existing.image,
@@ -131,6 +137,7 @@ Future<void> _saveCart() async {
         productId,
         () => CartItem(
           orderid: productId,
+          image: image,
           name: title,
           price: price,
           // image: image,
@@ -175,20 +182,18 @@ class CartPage extends StatelessWidget {
 
   try {
     await orderCollection.add({
-      'email': user.email, // <-- เพิ่ม email ของผู้ใช้
-      'total': total,
-      'date': Timestamp.now(),
-      'items': items.values
-          .map(
-            (item) => {
-              'orderid': item.orderid,
-              'name': item.name,
-              'price': item.price,
-              'quantity': item.quantity,
-            },
-          )
-          .toList(),
-    });
+  'email': user.email,
+  'total': total,
+  'date': Timestamp.now(),
+  'items': items.values.map((item) => {
+    'orderid': item.orderid,
+    'name': item.name,
+    'price': item.price,
+    'quantity': item.quantity,
+    'image': item.image, // ✅ เพิ่ม image
+  }).toList(),
+});
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Order placed successfully!")),
     );
@@ -224,6 +229,16 @@ class CartPage extends StatelessWidget {
                                 vertical: 6,
                               ),
                               child: ListTile(
+                                leading: item.image.isNotEmpty
+    ? Image.network(
+        item.image,
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
+      )
+    : const Icon(Icons.image_not_supported),
+
+                                
                                 title: Text(item.name),
                                 subtitle: Text(
     "฿${(item.price * item.quantity).toStringAsFixed(2)}",
@@ -308,7 +323,7 @@ class CartPage extends StatelessWidget {
                                                     context,
                                                     true,
                                                   ),
-                                              child: const Text('Yes'),
+                                              child: const Text('ตกลง'),
                                             ),
                                           ],
                                         ),
