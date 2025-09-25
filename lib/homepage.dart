@@ -29,7 +29,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   final Future<FirebaseApp> booktell = Firebase.initializeApp();
   final VoidCallback onToggleTheme;
   final favoriteService = FavoriteService();
@@ -264,10 +263,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 listen: false,
                               ).addItem(
                                 doc.id,
-doc["name"] ?? "Unknown",
-(doc["price"] as num?)?.toDouble() ?? 0.0,
-doc["image"] ?? "",
-
+                                doc["name"] ?? "Unknown",
+                                (doc["price"] as num?)?.toDouble() ?? 0.0,
+                                doc["image"] ?? "",
                               );
 
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -355,46 +353,49 @@ doc["image"] ?? "",
                 onPressed: widget.onToggleTheme,
               ),
               AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
-              ? AuthenticationService().getEmail() != "Guest" 
-                  ? IconButton(
-                    icon: const Icon(Icons.shopping_cart, color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const CartPage()),
-                      );
-                    },
-                  )
-                  : ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(
-                        0xFFffd342,
-                      ), // button background color
-                      foregroundColor: Colors.black, // text color
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          8,
-                        ), // rounded corners
-                      ),
-                    ),
-                    child: const Text('Login'),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) =>
-                                  LoginScreen(onToggleTheme: onToggleTheme),
+                  ? AuthenticationService().getEmail() != "Guest"
+                      ? IconButton(
+                        icon: const Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
                         ),
-                      );
-                    },
-                  )
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const CartPage()),
+                          );
+                        },
+                      )
+                      : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(
+                            0xFFffd342,
+                          ), // button background color
+                          foregroundColor: Colors.black, // text color
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              8,
+                            ), // rounded corners
+                          ),
+                        ),
+                        child: const Text('Login'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) =>
+                                      LoginScreen(onToggleTheme: onToggleTheme),
+                            ),
+                          );
+                        },
+                      )
                   : const SizedBox.shrink(),
-                  
+
               SizedBox(width: 10),
               //   ElevatedButton(
               //   child: Text("Login"),

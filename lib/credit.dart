@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_book/drawer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
 
 class CreditPage extends StatelessWidget {
@@ -43,10 +41,21 @@ class CreditPage extends StatelessWidget {
                                   .white // Dark mode
                               : Colors.black, // Light mode
                     ),
+                  
                   ),
 
+// แสดงภาพเป็นวงกลม
+// ClipOval(
+//   child: Image.asset(
+//     "images/481075447_1197734011711237_3097041767860134394_n.jpg",   // ใส่ path รูปที่คุณมี
+//     width: 120,
+//     height: 120,
+//     fit: BoxFit.cover,       // ครอบให้เต็มวงกลม
+//   ),
+// ),
+
                   
-                  const SizedBox(height: 80),
+                  const SizedBox(height: 40),
                   const SizedBox(height: 10),
                   TextButton(
                     onPressed: null,
@@ -62,8 +71,18 @@ class CreditPage extends StatelessWidget {
                             ? Colors.white // Dark mode
                             : Colors.black, // Light mode
                       ),
+                      
                     ),
+                    
                   ),
+//                   ClipOval(
+//   child: Image.asset(
+//     "images/S__62791683.jpg",   // ใส่ path รูปที่คุณมี
+//     width: 100,
+//     height: 100,
+//     fit: BoxFit.cover,       // ครอบให้เต็มวงกลม
+//   ),
+// ),
 
                   const SizedBox(height: 30),
                   ElevatedButton(
