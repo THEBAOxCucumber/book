@@ -264,8 +264,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                 listen: false,
                               ).addItem(
                                 doc.id,
-                                doc["name"] ?? "Unknown",
-                                doc["price"] ?? "0",
+doc["name"] ?? "Unknown",
+(doc["price"] as num?)?.toDouble() ?? 0.0,
+doc["image"] ?? "",
+
                               );
 
                               ScaffoldMessenger.of(context).showSnackBar(

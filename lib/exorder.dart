@@ -22,6 +22,7 @@ class OrderHistoryPage extends StatelessWidget {
               return CartItem(
                 orderid: doc.id,
                 name: item['name'] ?? '',
+                image: item['image'],
                 price: (item['price'] as num?)?.toDouble() ?? 0.0,
                 quantity: item['quantity'] ?? 1,
               );
@@ -72,34 +73,49 @@ class OrderHistoryPage extends StatelessWidget {
               );
 
               return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                child: ExpansionTile(
-                  title: Text("Order ${order.deliveredAt}"),
-                  subtitle: Text("รวม ${order.items.length} เล่ม"),
-                 children: [
-  ...order.items.map(
-    (item) => ListTile(
-      title: Text(item.name),
-      subtitle: Text(
-        '฿${(item.price * item.quantity).toStringAsFixed(2)} x ${item.quantity}',
+  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+  child: ExpansionTile(
+    // ✅ แสดงภาพเล่มแรกเป็น preview
+  
+
+    title: Text("Order ${order.deliveredAt}"),
+    subtitle: Text("รวม ${order.items.length} เล่ม"),
+
+    children: [
+      // ✅ แสดงทุกรายการพร้อมรูป
+      ...order.items.map(
+        (item) => ListTile(
+          leading: item.image.isNotEmpty
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Image.network(
+                    item.image,
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : const Icon(Icons.book, size: 40, color: Colors.grey),
+          title: Text(item.name),
+          subtitle: Text(
+            '฿${(item.price * item.quantity).toStringAsFixed(2)} x ${item.quantity}',
+          ),
+        ),
+      ).toList(),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          'Total: ฿${totalPrice.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-    ),
-  ).toList(),  // ✅ แปลงเป็น List<Widget>
-  Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    child: Text(
-      'Total: ฿${totalPrice.toStringAsFixed(2)}',
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
+    ],
   ),
-],
+);
 
-
-                ),
-              );
             },
           );
         },

@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "y": "read-and-tell",
+    "default": "read-and-tell"
+  },
+  "targets": {},
+  "etags": {}
+}
