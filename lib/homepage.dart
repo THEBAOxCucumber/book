@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'loginpage.dart';
@@ -60,6 +61,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
   /// แสดงรายละเอียดหนังสือใน Dialog
   void _showBookDetail(BuildContext context, QueryDocumentSnapshot doc) {
+    final FlutterTts flutterTts = FlutterTts();
+
+    Future _speak() async {
+      String textToSpeak = '''
+ชื่อหนังสือ: ${doc['name']}
+รีวิว: ${doc['review']}
+''';
+      await flutterTts.setLanguage("th-TH");
+      await flutterTts.setPitch(1.0);
+      await flutterTts.setSpeechRate(0.5);
+      await flutterTts.speak(textToSpeak);
+      // ตรวจสอบและเลือกเสียงไทย (ถ้ามีหลายเสียง)
+      var voices = await flutterTts.getVoices;
+      for (var voice in voices) {
+        if (voice['locale'] == 'th-TH') {
+          await flutterTts.setVoice(voice);
+          break;
+        }
+      }
+    }
+
     showDialog(
       context: context,
       builder:
@@ -77,6 +99,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   Text('สำนักพิมพ์: ${doc['publisher']}'),
                   const SizedBox(height: 10),
                   Text(doc['review']),
+                  ElevatedButton.icon(
+                    onPressed: _speak,
+                    icon: const Icon(Icons.surround_sound, color: Colors.white),
+                    label: const Text(
+                      "ฟังรีวิว",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF103F91),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 20,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
