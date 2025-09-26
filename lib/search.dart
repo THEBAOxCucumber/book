@@ -98,7 +98,6 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  @override
   Widget buildResults(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: booksRef.snapshots(), // ดึงทุกเอกสาร

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'authenticationService.dart';
-import 'main.dart';
+// import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
 import 'register.dart';
@@ -18,9 +18,15 @@ class _LoginScreen extends State<LoginScreen> {
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Future<void> _login() async {
+  // Future<void> _login() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setBool('isLoggedIn', true);
+  // }
+
+  Future<bool> _getTheme() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
+    print(prefs.getBool('isDarkMode'));
+    return prefs.getBool('isDarkMode') ?? false;
   }
 
   Future<void> _handleLogin(username, password) async {
@@ -32,7 +38,7 @@ class _LoginScreen extends State<LoginScreen> {
       bool success = await AuthenticationService().login(username, password);
 
       if (success) {
-        _showMessage('เข้าสู่ระบบสำเร็จ');
+        // _showMessage('เข้าสู่ระบบสำเร็จ');
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder:
@@ -80,7 +86,7 @@ class _LoginScreen extends State<LoginScreen> {
                 // Logo
                 Container(
                   padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(color: Colors.white,),
+                  decoration: BoxDecoration(color: Colors.white),
                   child: const Image(
                     image: AssetImage("images/Read and tell bwpng.png"),
                     width: 500,
@@ -168,7 +174,7 @@ class _LoginScreen extends State<LoginScreen> {
                     onPressed:
                         _isLoading ? null : () => _handleLogin(email, password),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:  Color(0xFF103F91),
+                      backgroundColor: Color(0xFF103F91),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -207,32 +213,42 @@ class _LoginScreen extends State<LoginScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: OutlinedButton(
-                    onPressed:
-                        _isLoading
-                            ? null
-                            : () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RegisterScreen(),
-                                ),
-                              );
-                            },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor:  Color(0xFF103F91),
-                      side: BorderSide(color:  Color(0xFF103F91)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'สมัครสมาชิก',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: FutureBuilder<bool>(
+                    future: _getTheme(),
+                    builder: (context, snapshot) {
+                      final isDarkMode = snapshot.data ?? false;
+                      return OutlinedButton(
+                        onPressed:
+                            _isLoading
+                                ? null
+                                : () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RegisterScreen(),
+                                    ),
+                                  );
+                                },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor:
+                              isDarkMode ? Colors.white : Color(0xFF103F91),
+                          side: BorderSide(
+                            color:
+                                isDarkMode ? Colors.white : Color(0xFF103F91),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'สมัครสมาชิก',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
 
@@ -243,9 +259,18 @@ class _LoginScreen extends State<LoginScreen> {
                   onPressed: () {
                     _showResetPasswordDialog();
                   },
-                  child: Text(
-                    'ลืมรหัสผ่าน?',
-                    style: TextStyle(color:  Color(0xFF103F91), fontSize: 14),
+                  child: FutureBuilder<bool>(
+                    future: _getTheme(),
+                    builder: (context, snapshot) {
+                      final isDarkMode = snapshot.data ?? false;
+                      return Text(
+                        'ลืมรหัสผ่าน?',
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.white : Color(0xFF103F91),
+                          fontSize: 14,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

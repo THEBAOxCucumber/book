@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:project_book/loginpage.dart';
+// import 'package:project_book/loginpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'homepage.dart';
-import 'drawer.dart';
-import 'credit.dart';
+// import 'drawer.dart';
+// import 'credit.dart';
 import 'package:provider/provider.dart';
 import 'cart.dart';
-import 'favoriteservice.dart';
+// import 'favoriteservice.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ void main() async {
   final isDarkMode = prefs.getBool('isDarkMode') ?? false;
   final loggedIn = prefs.getBool('isLoggedIn') ?? false;
   
-  final VoidCallback onToggleTheme;
+  // final VoidCallback onToggleTheme;
 
   runApp(
     MultiProvider(
@@ -46,7 +46,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late bool _isDarkMode;
-  late bool _isLoggedIn;
+  // late bool _isLoggedIn;
   // int _selectedIndex = 0;
 
   // void _onItemTapped(int index) {
@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _isDarkMode = widget.isDarkMode;
-    _isLoggedIn = widget.isLoggedIn;
+    // _isLoggedIn = widget.isLoggedIn;
   }
 
   void _toggleTheme() async {

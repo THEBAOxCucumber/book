@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cart.dart';
-import 'drawer.dart';
+// import 'drawer.dart';
 
 class OrderPage extends StatelessWidget {
   const OrderPage({super.key});
@@ -40,7 +40,7 @@ class OrderPage extends StatelessWidget {
 
   // ถ้าต้องการฟังก์ชันนี้จริง ๆ ก็เก็บไว้ได้
   Future<void> confirmDelivery(CartItem order, CartItem orderDoc) async {
-    final double total = order.total;
+    // final double total = order.total;
 
     final orderRef = FirebaseFirestore.instance
         .collection("orders")

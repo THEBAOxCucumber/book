@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_book/CRUDnav.dart';
+// import 'package:project_book/CRUDnav.dart';
 import 'package:project_book/favoritepage.dart';
 import 'package:project_book/homepage.dart';
 import 'authenticationService.dart';
-import 'loginpage.dart';
+// import 'loginpage.dart';
 import 'credit.dart';
 import 'booktell.dart';
 import 'order.dart';
@@ -20,11 +20,11 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawer extends State<MyDrawer> {
   int _selectedIndex = 0;
   final String? email = AuthenticationService().getEmail();
-  static const TextStyle optionStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-  );
-  final _isVisible = true;
+  // static const TextStyle optionStyle = TextStyle(
+  //   fontSize: 30,
+  //   fontWeight: FontWeight.bold,
+  // );
+  // final _isVisible = true;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -62,6 +62,10 @@ class _MyDrawer extends State<MyDrawer> {
                 16, // Space from the trailing edge to the end of the line
             color: Colors.grey, // Color of the divider line
           ),
+
+          // ================
+          // MARK: หน้าแรก
+          // ================
           ListTile(
             selected: _selectedIndex == 0,
             leading: const Icon(Icons.home),
@@ -78,27 +82,110 @@ class _MyDrawer extends State<MyDrawer> {
               );
             },
           ),
-          AuthenticationService().getEmail() == "Guest" || AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
+
+          // ================
+          // MARK: หนังสือของฉัน
+          // ================
+          AuthenticationService().getEmail() == "Guest" ||
+                  AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
               ? const SizedBox.shrink()
               : ListTile(
-            enabled: email != "Guest",
-            selected: _selectedIndex == 1,
-            leading: const Icon(Icons.book),
-            title: const Text('หนังสือของฉัน'),
-            onTap: () {
-              _onItemTapped(1);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => FavoritePage(),
-                ),
-              );
-            },
-          ),
+                enabled: email != "Guest",
+                selected: _selectedIndex == 1,
+                leading: const Icon(Icons.book),
+                title: const Text('หนังสือของฉัน'),
+                onTap: () {
+                  _onItemTapped(0);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => FavoritePage()),
+                  );
+                },
+              ),
 
-         
+          // ================
+          // MARK: เพิ่มหนังสือ
+          // ================
+          AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
+              ? const SizedBox.shrink()
+              : ListTile(
+                // enabled: email != "phiriyaporn.y@ku.th",
+                selected: _selectedIndex == 3,
+                leading: const Icon(Icons.book),
+                title: const Text('เพิ่มหนังสือ'),
+                onTap: () {
+                  _onItemTapped(0);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => BookTellScreen(
+                            onToggleTheme: widget.onToggleTheme,
+                          ),
+                    ),
+                  );
+                },
+              ),
 
+          // ================
+          // MARK: คำสั่งซื้อ
+          // ================
+          AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
+              ? const SizedBox.shrink()
+              : ListTile(
+                // enabled: email != "phiriyaporn.y@ku.th",
+                selected: _selectedIndex == 4,
+                leading: const Icon(Icons.shopping_basket),
+                title: const Text('คำสั่งซื้อ'),
+                onTap: () {
+                  _onItemTapped(0);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => OrderPage()),
+                  );
+                },
+              ),
+
+          // ================
+          // MARK: ประวัติการสั่งซื้อ
+          // ================
+          AuthenticationService().getEmail() == "Guest" ||
+                  AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
+              ? const SizedBox.shrink()
+              : ListTile(
+                enabled: email != "Guest",
+                selected: _selectedIndex == 5,
+                leading: const Icon(Icons.shopping_basket),
+                title: const Text('ประวัติการสั่งซื้อ'),
+                onTap: () {
+                  _onItemTapped(0);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => OrderHistoryPage()),
+                  );
+                },
+              ),
+          // ----- เตือน: แก้เงื่อนไขว่าจะแสดงตอน login email อะไร
+          // ListTile(
+          //   selected: _selectedIndex == 3,
+          // leading: const Icon(Icons.add),
+          // title: const Text('เพิ่ม/แก้ไข/ลบหนังสือ'),
+          // onTap: () {
+          //   _onItemTapped(3);
+          //   print(_selectedIndex);
+          //   Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (_) => Crudnav(onToggleTheme: widget.onToggleTheme),
+          //     ),
+          //     (route) => false,
+          //   );
+          // },
+          // ),
+
+          // ================
+          // MARK: เหล่าผู้จัดทำ
+          // ================
           ListTile(
             selected: _selectedIndex == 2,
             leading: const Icon(Icons.groups),
@@ -114,78 +201,9 @@ class _MyDrawer extends State<MyDrawer> {
             },
           ),
 
-           AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
-              ? const SizedBox.shrink()
-              : ListTile(
-            // enabled: email != "phiriyaporn.y@ku.th",
-            selected: _selectedIndex == 3,
-            leading: const Icon(Icons.book),
-            title: const Text('เพิ่มหนังสือ'),
-            onTap: () {
-              _onItemTapped(3);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => BookTellScreen(onToggleTheme: widget.onToggleTheme,),
-                ),
-              );
-            },
-          ),
-
-           AuthenticationService().getEmail() != "phiriyaporn.y@ku.th"
-              ? const SizedBox.shrink()
-              : ListTile(
-            // enabled: email != "phiriyaporn.y@ku.th",
-            selected: _selectedIndex == 4,
-            leading: const Icon(Icons.shopping_basket),
-            title: const Text('คำสั่งซื้อ'),
-            onTap: () {
-              _onItemTapped(3);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => OrderPage(),
-                ),
-              );
-            },
-          ),
-  AuthenticationService().getEmail() == "Guest" || AuthenticationService().getEmail() == "phiriyaporn.y@ku.th"
-              ? const SizedBox.shrink()
-              : ListTile(
-            enabled: email != "Guest",
-            selected: _selectedIndex == 5,
-            leading: const Icon(Icons.shopping_basket),
-            title: const Text('ประวัติการสั่งซื้อ'),
-            onTap: () {
-              _onItemTapped(1);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => OrderHistoryPage(),
-                ),
-              );
-            },
-          ),
-          // ----- เตือน: แก้เงื่อนไขว่าจะแสดงตอน login email อะไร
-          // ListTile(
-          //   selected: _selectedIndex == 3,
-            // leading: const Icon(Icons.add),
-            // title: const Text('เพิ่ม/แก้ไข/ลบหนังสือ'),
-            // onTap: () {
-            //   _onItemTapped(3);
-            //   print(_selectedIndex);
-            //   Navigator.pushAndRemoveUntil(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (_) => Crudnav(onToggleTheme: widget.onToggleTheme),
-            //     ),
-            //     (route) => false,
-            //   );
-            // },
-          // ),
+          // ================
+          // MARK: ออกจากระบบ
+          // ================
           AuthenticationService().getEmail() == "Guest"
               ? const SizedBox.shrink()
               : ListTile(

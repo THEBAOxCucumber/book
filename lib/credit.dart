@@ -41,20 +41,18 @@ class CreditPage extends StatelessWidget {
                                   .white // Dark mode
                               : Colors.black, // Light mode
                     ),
-                  
                   ),
 
-// แสดงภาพเป็นวงกลม
-// ClipOval(
-//   child: Image.asset(
-//     "images/481075447_1197734011711237_3097041767860134394_n.jpg",   // ใส่ path รูปที่คุณมี
-//     width: 120,
-//     height: 120,
-//     fit: BoxFit.cover,       // ครอบให้เต็มวงกลม
-//   ),
-// ),
+                  // แสดงภาพเป็นวงกลม
+                  ClipOval(
+                    child: Image.asset(
+                      "images/481075447_1197734011711237_3097041767860134394_n.jpg", // ใส่ path รูปที่คุณมี
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.cover, // ครอบให้เต็มวงกลม
+                    ),
+                  ),
 
-                  
                   const SizedBox(height: 40),
                   const SizedBox(height: 10),
                   TextButton(
@@ -67,22 +65,22 @@ class CreditPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white // Dark mode
-                            : Colors.black, // Light mode
+                        color:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? Colors
+                                    .white // Dark mode
+                                : Colors.black, // Light mode
                       ),
-                      
                     ),
-                    
                   ),
-//                   ClipOval(
-//   child: Image.asset(
-//     "images/S__62791683.jpg",   // ใส่ path รูปที่คุณมี
-//     width: 100,
-//     height: 100,
-//     fit: BoxFit.cover,       // ครอบให้เต็มวงกลม
-//   ),
-// ),
+                  ClipOval(
+                    child: Image.asset(
+                      "images/S__62791683.jpg", // ใส่ path รูปที่คุณมี
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover, // ครอบให้เต็มวงกลม
+                    ),
+                  ),
 
                   const SizedBox(height: 30),
                   ElevatedButton(
@@ -106,11 +104,10 @@ class CreditPage extends StatelessWidget {
                       ),
                     ),
                     child: const Text(
-                      "เริ่มสั่งซื้อ",
+                      "กลับไปหน้าหลัก",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
-         
                 ],
               ),
             ),
