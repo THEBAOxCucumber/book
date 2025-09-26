@@ -160,8 +160,8 @@ class OrderPage extends StatelessWidget {
                             item.image.isNotEmpty
                                 ? ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
-                                  child: Image.network(
-                                    item.image,
+                                  child: Image.asset(
+                                    item.image, // ต้องเป็น path ใน assets เช่น "images/xxx.jpg"
                                     width: 40,
                                     height: 40,
                                     fit: BoxFit.cover,

@@ -52,15 +52,24 @@ class FavoritePage extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 child: ListTile(
                   title: Text(book.name.isNotEmpty ? book.name : '-'),
-                  leading:
-                      book.image != null
-                          ? Image.network(
-                            book.image!,
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          )
-                          : const Icon(Icons.book, size: 50),
+                 leading: book.image != null
+    ? (book.image!.startsWith('http')
+        ? Image.network(
+            book.image!,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.broken_image, size: 50),
+          )
+        : Image.asset(
+            book.image!, // ต้องเป็น path ใน assets เช่น "images/xxx.jpg"
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ))
+    : const Icon(Icons.book, size: 50),
+
                   subtitle: Text(
                     'ราคา: ${book.price?.toStringAsFixed(2) ?? '-'} THB',
                   ),

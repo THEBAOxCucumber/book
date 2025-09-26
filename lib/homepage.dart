@@ -65,9 +65,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Future _speak() async {
       String textToSpeak = '''
-ชื่อหนังสือ: ${doc['name']}
-รีวิว: ${doc['review']}
-''';
+          ชื่อหนังสือ: ${doc['name']}
+        รีวิว: ${doc['review']}
+      ''';
       await flutterTts.setLanguage("th-TH");
       await flutterTts.setPitch(1.0);
       await flutterTts.setSpeechRate(0.5);
@@ -92,31 +92,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(doc['image'], height: 300, fit: BoxFit.cover),
+                  Image.asset(
+                    doc['image'], // doc['image'] ควรเป็น path แบบ 'images/xxx.jpg'
+                    height: 300,
+                    fit: BoxFit.cover,
+                  ),
                   const SizedBox(height: 10),
                   Text('ราคา: ${doc['price']} บาท'),
                   Text('ผู้เขียน: ${doc['author']}'),
                   Text('สำนักพิมพ์: ${doc['publisher']}'),
                   const SizedBox(height: 10),
                   Text(doc['review']),
-                  ElevatedButton.icon(
-                    onPressed: _speak,
-                    icon: const Icon(Icons.surround_sound, color: Colors.white),
-                    label: const Text(
-                      "ฟังรีวิว",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF103F91),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 20,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -338,9 +324,43 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
 
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('ปิด'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // ปุ่มปิด
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 30,
+                      ),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                    child: const Text('ปิด'),
+                  ),
+
+                  // ปุ่มฟังรีวิว
+                  ElevatedButton.icon(
+                    onPressed: () => _speak(),
+                    icon: const Icon(Icons.surround_sound, color: Colors.white),
+                    label: const Text(
+                      "ฟังรีวิว",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF103F91),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 20,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 4,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -488,16 +508,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                   borderRadius: const BorderRadius.vertical(
                                     top: Radius.circular(12),
                                   ),
-                                  child: Image.network(
-                                    doc["image"] ?? "", // ✅ safer
+                                  child: Image.asset(
+                                    doc["image"], // เช่น "images/xxx.jpg"
                                     fit: BoxFit.cover,
                                     width: double.infinity,
-                                    errorBuilder:
-                                        (context, error, stackTrace) =>
-                                            const Icon(
-                                              Icons.broken_image,
-                                              size: 80,
-                                            ),
                                   ),
                                 ),
                               ),

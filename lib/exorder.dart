@@ -88,12 +88,12 @@ class OrderHistoryPage extends StatelessWidget {
           leading: item.image.isNotEmpty
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(6),
-                  child: Image.network(
-                    item.image,
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.asset(
+          item.image, // ต้องเป็น path ใน assets เช่น "images/xxx.jpg"
+          width: 40,
+          height: 40,
+          fit: BoxFit.cover,
+        ),
                 )
               : const Icon(Icons.book, size: 40, color: Colors.grey),
           title: Text(item.name),

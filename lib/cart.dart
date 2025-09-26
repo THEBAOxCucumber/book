@@ -230,13 +230,23 @@ class CartPage extends StatelessWidget {
                               ),
                               child: ListTile(
                                 leading: item.image.isNotEmpty
-    ? Image.network(
-        item.image,
-        width: 50,
-        height: 50,
-        fit: BoxFit.cover,
-      )
-    : const Icon(Icons.image_not_supported),
+
+    ? (item.image.startsWith('http')
+        ? Image.network(
+            item.image,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                const Icon(Icons.broken_image, size: 50),
+          )
+        : Image.asset(
+            item.image, // ต้องเป็น path ใน assets เช่น "images/xxx.jpg"
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ))
+    : const Icon(Icons.book, size: 50),
 
                                 
                                 title: Text(item.name),
