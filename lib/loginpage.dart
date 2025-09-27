@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  final focusNode = FocusNode();
+  // final focusNode = FocusNode();
   bool _obscurePassword = true;
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -112,7 +112,7 @@ class _LoginScreen extends State<LoginScreen> {
                   onChanged: (value) {
                     email = value;
                   },
-                  focusNode: focusNode,
+                  // focusNode: focusNode,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -136,7 +136,7 @@ class _LoginScreen extends State<LoginScreen> {
 
                 // ช่องกรอกรหัสผ่าน
                 TextFormField(
-                  focusNode: focusNode,
+                  // focusNode: focusNode,
                   onChanged: (value) {
                     password = value;
                   },
@@ -299,7 +299,7 @@ class _LoginScreen extends State<LoginScreen> {
                 Text('กรอกอีเมลเพื่อรับลิงก์รีเซ็ตรหัสผ่าน'),
                 SizedBox(height: 16),
                 TextFormField(
-                  focusNode: focusNode,
+                  // focusNode: focusNode,
                   onChanged: (value) {
                     email = value;
                   },

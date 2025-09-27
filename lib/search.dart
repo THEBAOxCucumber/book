@@ -76,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
-          focusNode: focusNode,
+          // focusNode: focusNode,
           controller: _controller,
           onChanged: (value) {
             setState(() {
