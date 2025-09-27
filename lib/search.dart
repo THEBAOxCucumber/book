@@ -19,6 +19,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final focusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
   late CollectionReference booksRef = widget.booksRef;
   String query = "";
@@ -75,6 +76,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
+          focusNode: focusNode,
           controller: _controller,
           onChanged: (value) {
             setState(() {

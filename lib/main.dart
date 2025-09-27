@@ -91,7 +91,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _isDarkMode = widget.isDarkMode;
+    final focusNode = FocusNode();
     // _isLoggedIn = widget.isLoggedIn;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+  focusNode.requestFocus();
+});
   }
 
   void _toggleTheme() async {
