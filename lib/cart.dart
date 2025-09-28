@@ -291,13 +291,13 @@ class CartPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Text(
-                    //   "Total: ฿${cart.totalAmount.toStringAsFixed(2)}",
-                    //   style: const TextStyle(
-                    //     fontSize: 18,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
+                    Text(
+                      "Total: ฿${cart.totalAmount.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     Expanded(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(

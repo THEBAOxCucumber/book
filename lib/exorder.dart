@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'cart.dart';
+import 'package:intl/intl.dart';
+final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+
 
 // import 'order.dart';
 
@@ -11,9 +14,11 @@ class OrderHistoryPage extends StatelessWidget {
   User? get user => FirebaseAuth.instance.currentUser;
 
   Stream<List<OrderHistoryModel>> getOrders() {
+    
     return FirebaseFirestore.instance
         .collection("order_history")
         .where("email", isEqualTo: user!.email)
+
         .snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) {
@@ -22,13 +27,14 @@ class OrderHistoryPage extends StatelessWidget {
               return CartItem(
                 orderid: doc.id,
                 name: item['name'] ?? '',
-                image: item['image'],
+                // หากใน Firestore เก็บเป็น URL ควรใช้ Image.network ด้านล่าง
+                image: (item['image'] ?? '') as String,
                 price: (item['price'] as num?)?.toDouble() ?? 0.0,
                 quantity: item['quantity'] ?? 1,
               );
             }).toList();
 
-            return OrderHistoryModel(
+           return OrderHistoryModel(
               orderId: doc.id,
               email: data['email'] ?? '-',
               deliveredAt: (data['deliveredAt'] as Timestamp?)
@@ -78,7 +84,8 @@ class OrderHistoryPage extends StatelessWidget {
     // ✅ แสดงภาพเล่มแรกเป็น preview
   
 
-    title: Text("Order ${order.deliveredAt}"),
+    title: Text("Order ${dateFormat.format(DateTime.parse(order.deliveredAt))}"),
+
     subtitle: Text("รวม ${order.items.length} เล่ม"),
 
     children: [

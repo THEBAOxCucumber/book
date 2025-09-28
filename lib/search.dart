@@ -392,6 +392,38 @@ class _SearchPageState extends State<SearchPage> {
                                         },
                                       ),
                                     ),
+                                    const SizedBox(width: 4),
+                                    // ปุ่มฟังรีวิว
+                                    ElevatedButton.icon(
+                                      onPressed:
+                                          () => _speak(
+                                            "ชื่อหนังสือ: ${doc['name']}\nรีวิว: ${doc['review']}",
+                                          ),
+                                      icon: const Icon(
+                                        Icons.surround_sound,
+                                        color: Colors.white,
+                                      ),
+                                      label: const Text(
+                                        "ฟังรีวิว",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF103F91),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 8,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     IconButton(
                                       icon: FavoriteIcon(
                                         bookId: doc.id,
@@ -427,36 +459,6 @@ class _SearchPageState extends State<SearchPage> {
                                     textStyle: const TextStyle(fontSize: 16),
                                   ),
                                   child: const Text('ปิด'),
-                                ),
-
-                                // ปุ่มฟังรีวิว
-                                ElevatedButton.icon(
-                                  onPressed:
-                                      () => _speak(
-                                        "ชื่อหนังสือ: ${doc['name']}\nรีวิว: ${doc['review']}",
-                                      ),
-                                  icon: const Icon(
-                                    Icons.surround_sound,
-                                    color: Colors.white,
-                                  ),
-                                  label: const Text(
-                                    "ฟังรีวิว",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF103F91),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 15,
-                                      horizontal: 20,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    elevation: 4,
-                                  ),
                                 ),
                               ],
                             ),

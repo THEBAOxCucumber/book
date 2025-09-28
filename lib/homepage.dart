@@ -188,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               },
                             ),
                           ),
-
+const SizedBox(width: 4),
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -268,6 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
+
                           child: const Text('Add to cart'),
                           onPressed: () {
                             final userEmail =
@@ -303,7 +304,30 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                         ),
                       ),
-
+                      // ปุ่มฟังรีวิว
+                      const SizedBox(width: 4),
+                      ElevatedButton.icon(
+                        onPressed: () => _speak(),
+                        icon: const Icon(
+                          Icons.surround_sound,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          "ฟังรีวิว",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF103F91),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
                       IconButton(
                         icon: FavoriteIcon(
                           bookId: doc.id,
@@ -338,27 +362,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       textStyle: const TextStyle(fontSize: 16),
                     ),
                     child: const Text('ปิด'),
-                  ),
-
-                  // ปุ่มฟังรีวิว
-                  ElevatedButton.icon(
-                    onPressed: () => _speak(),
-                    icon: const Icon(Icons.surround_sound, color: Colors.white),
-                    label: const Text(
-                      "ฟังรีวิว",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF103F91),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 20,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 4,
-                    ),
                   ),
                 ],
               ),
