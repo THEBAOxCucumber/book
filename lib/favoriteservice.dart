@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FavoriteIcon extends StatefulWidget {
   final String bookId;     // id หนังสือ
   final String name;      // ชื่อหนังสือ
-  final double price;    // ราคาหนังสือ
+  final int price;    // ราคาหนังสือ
   final String image;  // รูปหนังสือ (ถ้ามี)
 
   const FavoriteIcon({

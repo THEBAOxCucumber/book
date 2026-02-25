@@ -373,9 +373,7 @@ class _SearchPageState extends State<SearchPage> {
                                             ).addItem(
                                               doc.id,
                                               doc["name"] ?? "Unknown",
-                                              (doc["price"] as num?)
-                                                      ?.toDouble() ??
-                                                  0.0,
+                                              doc["price"] ?? 0,
                                               doc["image"] ?? "",
                                             );
 
@@ -429,7 +427,7 @@ class _SearchPageState extends State<SearchPage> {
                                         bookId: doc.id,
                                         image: doc["image"] ?? "",
                                         name: doc["name"] ?? "Unknown",
-                                        price: doc["price"]?.toDouble() ?? 0.0,
+                                        price: doc["price"]?.toInt() ?? 0,
                                       ),
                                       onPressed: () {
                                         toggleFavorite(
@@ -437,7 +435,7 @@ class _SearchPageState extends State<SearchPage> {
                                             id: doc.id,
                                             name: doc["name"] ?? "Unknown",
                                             price:
-                                                doc["price"]?.toDouble() ?? 0.0,
+                                                doc["price"]?.toInt() ?? 0,
                                           ),
                                         );
                                       },

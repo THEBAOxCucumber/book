@@ -38,7 +38,7 @@ class _EditBookPageState extends State<EditBookPage> {
       if (doc.exists) {
         final data = doc.data()!;
         _nameController.text = data['name'] ?? '';
-        _priceController.text = data['price']?.toString() ?? '';
+        _priceController.text = data['price'] ?? 0;
         _authorController.text = data['author'] ?? '';
         _imageController.text = data['image'] ?? '';
         _publisherController.text = data['publisher'] ?? '';

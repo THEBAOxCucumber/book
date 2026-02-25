@@ -29,7 +29,7 @@ class OrderHistoryPage extends StatelessWidget {
                 name: item['name'] ?? '',
                 // หากใน Firestore เก็บเป็น URL ควรใช้ Image.network ด้านล่าง
                 image: (item['image'] ?? '') as String,
-                price: (item['price'] as num?)?.toDouble() ?? 0.0,
+                price: (item['price'] ?? 0),
                 quantity: item['quantity'] ?? 1,
               );
             }).toList();

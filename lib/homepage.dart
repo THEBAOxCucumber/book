@@ -291,7 +291,7 @@ const SizedBox(width: 4),
                               ).addItem(
                                 doc.id,
                                 doc["name"] ?? "Unknown",
-                                (doc["price"] as num?)?.toDouble() ?? 0.0,
+                                doc["price"]?.toInt() ?? 0,
                                 doc["image"] ?? "",
                               );
 
@@ -333,14 +333,14 @@ const SizedBox(width: 4),
                           bookId: doc.id,
                           image: doc["image"] ?? "",
                           name: doc["name"] ?? "Unknown",
-                          price: doc["price"]?.toDouble() ?? 0.0,
+                          price: doc["price"]?.toInt() ?? 0,
                         ),
                         onPressed: () {
                           toggleFavorite(
                             Book(
                               id: doc.id,
                               name: doc["name"] ?? "Unknown",
-                              price: doc["price"]?.toDouble() ?? 0.0,
+                              price: doc["price"]?.toInt() ?? 0,
                             ),
                           );
                         },

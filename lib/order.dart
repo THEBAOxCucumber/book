@@ -23,7 +23,7 @@ class OrderPage extends StatelessWidget {
                         orderid: doc.id,
                         image: item['image'] ?? '',
                         name: item['name'] ?? '',
-                        price: (item['price'] as num?)?.toDouble() ?? 0.0,
+                        price: (item['price']?? 0),
                         quantity: item['quantity'] ?? 1,
                       );
                     }).toList();

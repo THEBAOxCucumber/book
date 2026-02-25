@@ -2,7 +2,7 @@ class Book {
   final String id;
   final String  name;
   final String? email;
-  final double? price;
+  final int? price;
   final String? image;
   
 
@@ -18,7 +18,7 @@ class Book {
     return Book(
       id: id,
       name: data['name'] as String? ?? '',
-      price: (data['price'] as num?)?.toDouble() ?? 0.0,
+      price: (data["price"] as num).toInt(),
       email: data['email'] as String?,
       image: data['image'] as String?,
     );
